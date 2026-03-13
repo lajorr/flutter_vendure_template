@@ -3,6 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../application/controllers/products_controller.dart';
 
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/app_text_styles.dart';
+
 class ProductDetailScreen extends ConsumerWidget {
   final String slug;
 
@@ -32,32 +36,37 @@ class ProductDetailScreen extends ConsumerWidget {
                         ),
                   )
                 else
-                  const SizedBox(height: 300, child: Placeholder()),
+                  const SizedBox(
+                    height: 300,
+                    child: Center(child: Icon(Icons.image_not_supported, size: 50)),
+                  ),
                 Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.all(AppSpacing.m),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         product.name,
-                        style: Theme.of(context).textTheme.headlineMedium,
+                        style: AppTextStyles.h1,
                       ),
-                      const SizedBox(height: 8),
+                      AppSpacing.vXS,
                       Text(
                         '\$${product.price.toStringAsFixed(2)}',
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          color: Theme.of(context).colorScheme.primary,
-                          fontWeight: FontWeight.bold,
+                        style: AppTextStyles.h2.copyWith(
+                          color: AppColors.primaryNavy,
                         ),
                       ),
-                      const SizedBox(height: 24),
+                      AppSpacing.vL,
                       Text(
                         'Description',
-                        style: Theme.of(context).textTheme.titleMedium,
+                        style: AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.bold),
                       ),
-                      const SizedBox(height: 8),
-                      Text(product.description),
-                      const SizedBox(height: 32),
+                      AppSpacing.vXS,
+                      Text(
+                        product.description,
+                        style: AppTextStyles.bodyLarge,
+                      ),
+                      AppSpacing.vXL,
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton.icon(
@@ -69,9 +78,6 @@ class ProductDetailScreen extends ConsumerWidget {
                           },
                           icon: const Icon(Icons.add_shopping_cart),
                           label: const Text('Add to Cart'),
-                          style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                          ),
                         ),
                       ),
                     ],
@@ -82,7 +88,7 @@ class ProductDetailScreen extends ConsumerWidget {
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stack) => Center(child: Text('Error: \$error')),
+        error: (error, stack) => Center(child: Text('Error: $error')),
       ),
     );
   }

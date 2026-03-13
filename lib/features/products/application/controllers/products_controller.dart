@@ -43,7 +43,9 @@ class ProductsController extends _$ProductsController {
 
     final currentProducts = state.value ?? [];
 
-    state = const AsyncLoading();
+    // Maintain previous state while loading more
+    // ignore: invalid_use_of_internal_member
+    state = AsyncLoading<List<Product>>().copyWithPrevious(state);
 
     try {
       final newProducts = await _fetchProducts(skip: currentProducts.length);

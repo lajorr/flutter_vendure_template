@@ -18,6 +18,7 @@ dependencies:
   json_annotation: ^4.11.0
   logger: ^2.6.2
   riverpod_annotation: ^4.0.2
+  shimmer: ^3.0.0
 
 dev_dependencies:
   flutter_test:

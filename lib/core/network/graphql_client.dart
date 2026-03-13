@@ -54,7 +54,7 @@ class LoggerLink extends Link {
 final graphqlClientProvider = Provider<GraphQLClient>((ref) {
   // Replace with your actual Vendure Shop API URL
   final HttpLink httpLink = HttpLink(
-    'http://192.168.1.134:3000/shop-api', // Demo Vendure backend
+    'https://demo.vendure.io/shop-api', // Demo Vendure backend
   );
 
   // Example auth link if authentication is required (e.g., passing Bearer token)

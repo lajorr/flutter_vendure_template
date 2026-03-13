@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'router/app_router.dart';
 
+import '../core/theme/app_theme.dart';
+
 class VendureApp extends ConsumerWidget {
   const VendureApp({super.key});
 
@@ -12,10 +14,7 @@ class VendureApp extends ConsumerWidget {
 
     return MaterialApp.router(
       title: 'Vendure Ecommerce App',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
+      theme: AppTheme.lightTheme,
       routerConfig: goRouter,
       debugShowCheckedModeBanner: false,
     );
