@@ -1,56 +1,44 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../domain/entities/product.dart';
+import 'asset_model.dart';
+import 'facet_value_model.dart';
+import 'product_option_group_model.dart';
+import 'product_variant_model.dart';
 
 part 'product_model.freezed.dart';
 part 'product_model.g.dart';
 
 @freezed
 abstract class ProductModel with _$ProductModel {
-  const ProductModel._();
-
   const factory ProductModel({
     required String id,
-    required String slug,
     required String name,
-    required String description,
-    required String imageUrl,
-    required double price,
+    required String slug,
+    String? description,
+    @Default(true) bool enabled,
+    AssetModel? featuredAsset,
+    @Default([]) List<AssetModel> assets,
+    @Default([]) List<ProductVariantModel> variants,
+    @Default([]) List<ProductOptionGroupModel> optionGroups,
+    @Default([]) List<FacetValueModel> facetValues,
   }) = _ProductModel;
 
   factory ProductModel.fromJson(Map<String, dynamic> json) =>
       _$ProductModelFromJson(json);
 
-  // Custom Vendure mapping factory
-  factory ProductModel.fromVendureJson(Map<String, dynamic> json) {
-    final assets = json['assets'] as List<dynamic>?;
-    final String imageUrl = (assets != null && assets.isNotEmpty)
-        ? assets.first['preview'] ?? ''
-        : '';
+  const ProductModel._();
 
-    final variants = json['variants'] as List<dynamic>?;
-    final int priceWithTax = (variants != null && variants.isNotEmpty)
-        ? (variants.first['priceWithTax'] as int? ?? 0)
-        : 0;
-
-    return ProductModel(
-      id: json['id'] as String? ?? '',
-      slug: json['slug'] as String? ?? '',
-      name: json['name'] as String? ?? '',
-      description: json['description'] as String? ?? '',
-      imageUrl: imageUrl,
-      price: priceWithTax / 100.0,
-    );
-  }
-
-  Product toEntity() {
-    return Product(
-      id: id,
-      slug: slug,
-      name: name,
-      description: description,
-      imageUrl: imageUrl,
-      price: price,
-    );
-  }
+  Product toEntity() => Product(
+    id: id,
+    name: name,
+    slug: slug,
+    description: description,
+    enabled: enabled,
+    featuredAsset: featuredAsset?.toEntity(),
+    assets: assets.map((e) => e.toEntity()).toList(),
+    variants: variants.map((e) => e.toEntity()).toList(),
+    optionGroups: optionGroups.map((e) => e.toEntity()).toList(),
+    facetValues: facetValues.map((e) => e.toEntity()).toList(),
+  );
 }

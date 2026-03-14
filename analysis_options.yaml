@@ -1,1 +1,8 @@
 include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  exclude:
+    - Livio/**
+    - k_w_cafeterias/**
+  errors:
+    invalid_annotation_target: ignore

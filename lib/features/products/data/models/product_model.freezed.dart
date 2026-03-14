@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ProductModel {
 
- String get id; String get slug; String get name; String get description; String get imageUrl; double get price;
+ String get id; String get name; String get slug; String? get description; bool get enabled; AssetModel? get featuredAsset; List<AssetModel> get assets; List<ProductVariantModel> get variants; List<ProductOptionGroupModel> get optionGroups; List<FacetValueModel> get facetValues;
 /// Create a copy of ProductModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $ProductModelCopyWith<ProductModel> get copyWith => _$ProductModelCopyWithImpl<P
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProductModel&&(identical(other.id, id) || other.id == id)&&(identical(other.slug, slug) || other.slug == slug)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.imageUrl, imageUrl) || other.imageUrl == imageUrl)&&(identical(other.price, price) || other.price == price));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProductModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.slug, slug) || other.slug == slug)&&(identical(other.description, description) || other.description == description)&&(identical(other.enabled, enabled) || other.enabled == enabled)&&(identical(other.featuredAsset, featuredAsset) || other.featuredAsset == featuredAsset)&&const DeepCollectionEquality().equals(other.assets, assets)&&const DeepCollectionEquality().equals(other.variants, variants)&&const DeepCollectionEquality().equals(other.optionGroups, optionGroups)&&const DeepCollectionEquality().equals(other.facetValues, facetValues));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,slug,name,description,imageUrl,price);
+int get hashCode => Object.hash(runtimeType,id,name,slug,description,enabled,featuredAsset,const DeepCollectionEquality().hash(assets),const DeepCollectionEquality().hash(variants),const DeepCollectionEquality().hash(optionGroups),const DeepCollectionEquality().hash(facetValues));
 
 @override
 String toString() {
-  return 'ProductModel(id: $id, slug: $slug, name: $name, description: $description, imageUrl: $imageUrl, price: $price)';
+  return 'ProductModel(id: $id, name: $name, slug: $slug, description: $description, enabled: $enabled, featuredAsset: $featuredAsset, assets: $assets, variants: $variants, optionGroups: $optionGroups, facetValues: $facetValues)';
 }
 
 
@@ -48,11 +48,11 @@ abstract mixin class $ProductModelCopyWith<$Res>  {
   factory $ProductModelCopyWith(ProductModel value, $Res Function(ProductModel) _then) = _$ProductModelCopyWithImpl;
 @useResult
 $Res call({
- String id, String slug, String name, String description, String imageUrl, double price
+ String id, String name, String slug, String? description, bool enabled, AssetModel? featuredAsset, List<AssetModel> assets, List<ProductVariantModel> variants, List<ProductOptionGroupModel> optionGroups, List<FacetValueModel> facetValues
 });
 
 
-
+$AssetModelCopyWith<$Res>? get featuredAsset;
 
 }
 /// @nodoc
@@ -65,18 +65,34 @@ class _$ProductModelCopyWithImpl<$Res>
 
 /// Create a copy of ProductModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? slug = null,Object? name = null,Object? description = null,Object? imageUrl = null,Object? price = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? slug = null,Object? description = freezed,Object? enabled = null,Object? featuredAsset = freezed,Object? assets = null,Object? variants = null,Object? optionGroups = null,Object? facetValues = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String,slug: null == slug ? _self.slug : slug // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
-as String,imageUrl: null == imageUrl ? _self.imageUrl : imageUrl // ignore: cast_nullable_to_non_nullable
-as String,price: null == price ? _self.price : price // ignore: cast_nullable_to_non_nullable
-as double,
+as String,slug: null == slug ? _self.slug : slug // ignore: cast_nullable_to_non_nullable
+as String,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
+as String?,enabled: null == enabled ? _self.enabled : enabled // ignore: cast_nullable_to_non_nullable
+as bool,featuredAsset: freezed == featuredAsset ? _self.featuredAsset : featuredAsset // ignore: cast_nullable_to_non_nullable
+as AssetModel?,assets: null == assets ? _self.assets : assets // ignore: cast_nullable_to_non_nullable
+as List<AssetModel>,variants: null == variants ? _self.variants : variants // ignore: cast_nullable_to_non_nullable
+as List<ProductVariantModel>,optionGroups: null == optionGroups ? _self.optionGroups : optionGroups // ignore: cast_nullable_to_non_nullable
+as List<ProductOptionGroupModel>,facetValues: null == facetValues ? _self.facetValues : facetValues // ignore: cast_nullable_to_non_nullable
+as List<FacetValueModel>,
   ));
 }
+/// Create a copy of ProductModel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$AssetModelCopyWith<$Res>? get featuredAsset {
+    if (_self.featuredAsset == null) {
+    return null;
+  }
 
+  return $AssetModelCopyWith<$Res>(_self.featuredAsset!, (value) {
+    return _then(_self.copyWith(featuredAsset: value));
+  });
+}
 }
 
 
@@ -158,10 +174,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String slug,  String name,  String description,  String imageUrl,  double price)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  String slug,  String? description,  bool enabled,  AssetModel? featuredAsset,  List<AssetModel> assets,  List<ProductVariantModel> variants,  List<ProductOptionGroupModel> optionGroups,  List<FacetValueModel> facetValues)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ProductModel() when $default != null:
-return $default(_that.id,_that.slug,_that.name,_that.description,_that.imageUrl,_that.price);case _:
+return $default(_that.id,_that.name,_that.slug,_that.description,_that.enabled,_that.featuredAsset,_that.assets,_that.variants,_that.optionGroups,_that.facetValues);case _:
   return orElse();
 
 }
@@ -179,10 +195,10 @@ return $default(_that.id,_that.slug,_that.name,_that.description,_that.imageUrl,
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String slug,  String name,  String description,  String imageUrl,  double price)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  String slug,  String? description,  bool enabled,  AssetModel? featuredAsset,  List<AssetModel> assets,  List<ProductVariantModel> variants,  List<ProductOptionGroupModel> optionGroups,  List<FacetValueModel> facetValues)  $default,) {final _that = this;
 switch (_that) {
 case _ProductModel():
-return $default(_that.id,_that.slug,_that.name,_that.description,_that.imageUrl,_that.price);case _:
+return $default(_that.id,_that.name,_that.slug,_that.description,_that.enabled,_that.featuredAsset,_that.assets,_that.variants,_that.optionGroups,_that.facetValues);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -199,10 +215,10 @@ return $default(_that.id,_that.slug,_that.name,_that.description,_that.imageUrl,
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String slug,  String name,  String description,  String imageUrl,  double price)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  String slug,  String? description,  bool enabled,  AssetModel? featuredAsset,  List<AssetModel> assets,  List<ProductVariantModel> variants,  List<ProductOptionGroupModel> optionGroups,  List<FacetValueModel> facetValues)?  $default,) {final _that = this;
 switch (_that) {
 case _ProductModel() when $default != null:
-return $default(_that.id,_that.slug,_that.name,_that.description,_that.imageUrl,_that.price);case _:
+return $default(_that.id,_that.name,_that.slug,_that.description,_that.enabled,_that.featuredAsset,_that.assets,_that.variants,_that.optionGroups,_that.facetValues);case _:
   return null;
 
 }
@@ -214,15 +230,43 @@ return $default(_that.id,_that.slug,_that.name,_that.description,_that.imageUrl,
 @JsonSerializable()
 
 class _ProductModel extends ProductModel {
-  const _ProductModel({required this.id, required this.slug, required this.name, required this.description, required this.imageUrl, required this.price}): super._();
+  const _ProductModel({required this.id, required this.name, required this.slug, this.description, this.enabled = true, this.featuredAsset, final  List<AssetModel> assets = const [], final  List<ProductVariantModel> variants = const [], final  List<ProductOptionGroupModel> optionGroups = const [], final  List<FacetValueModel> facetValues = const []}): _assets = assets,_variants = variants,_optionGroups = optionGroups,_facetValues = facetValues,super._();
   factory _ProductModel.fromJson(Map<String, dynamic> json) => _$ProductModelFromJson(json);
 
 @override final  String id;
-@override final  String slug;
 @override final  String name;
-@override final  String description;
-@override final  String imageUrl;
-@override final  double price;
+@override final  String slug;
+@override final  String? description;
+@override@JsonKey() final  bool enabled;
+@override final  AssetModel? featuredAsset;
+ final  List<AssetModel> _assets;
+@override@JsonKey() List<AssetModel> get assets {
+  if (_assets is EqualUnmodifiableListView) return _assets;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_assets);
+}
+
+ final  List<ProductVariantModel> _variants;
+@override@JsonKey() List<ProductVariantModel> get variants {
+  if (_variants is EqualUnmodifiableListView) return _variants;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_variants);
+}
+
+ final  List<ProductOptionGroupModel> _optionGroups;
+@override@JsonKey() List<ProductOptionGroupModel> get optionGroups {
+  if (_optionGroups is EqualUnmodifiableListView) return _optionGroups;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_optionGroups);
+}
+
+ final  List<FacetValueModel> _facetValues;
+@override@JsonKey() List<FacetValueModel> get facetValues {
+  if (_facetValues is EqualUnmodifiableListView) return _facetValues;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_facetValues);
+}
+
 
 /// Create a copy of ProductModel
 /// with the given fields replaced by the non-null parameter values.
@@ -237,16 +281,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ProductModel&&(identical(other.id, id) || other.id == id)&&(identical(other.slug, slug) || other.slug == slug)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.imageUrl, imageUrl) || other.imageUrl == imageUrl)&&(identical(other.price, price) || other.price == price));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ProductModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.slug, slug) || other.slug == slug)&&(identical(other.description, description) || other.description == description)&&(identical(other.enabled, enabled) || other.enabled == enabled)&&(identical(other.featuredAsset, featuredAsset) || other.featuredAsset == featuredAsset)&&const DeepCollectionEquality().equals(other._assets, _assets)&&const DeepCollectionEquality().equals(other._variants, _variants)&&const DeepCollectionEquality().equals(other._optionGroups, _optionGroups)&&const DeepCollectionEquality().equals(other._facetValues, _facetValues));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,slug,name,description,imageUrl,price);
+int get hashCode => Object.hash(runtimeType,id,name,slug,description,enabled,featuredAsset,const DeepCollectionEquality().hash(_assets),const DeepCollectionEquality().hash(_variants),const DeepCollectionEquality().hash(_optionGroups),const DeepCollectionEquality().hash(_facetValues));
 
 @override
 String toString() {
-  return 'ProductModel(id: $id, slug: $slug, name: $name, description: $description, imageUrl: $imageUrl, price: $price)';
+  return 'ProductModel(id: $id, name: $name, slug: $slug, description: $description, enabled: $enabled, featuredAsset: $featuredAsset, assets: $assets, variants: $variants, optionGroups: $optionGroups, facetValues: $facetValues)';
 }
 
 
@@ -257,11 +301,11 @@ abstract mixin class _$ProductModelCopyWith<$Res> implements $ProductModelCopyWi
   factory _$ProductModelCopyWith(_ProductModel value, $Res Function(_ProductModel) _then) = __$ProductModelCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String slug, String name, String description, String imageUrl, double price
+ String id, String name, String slug, String? description, bool enabled, AssetModel? featuredAsset, List<AssetModel> assets, List<ProductVariantModel> variants, List<ProductOptionGroupModel> optionGroups, List<FacetValueModel> facetValues
 });
 
 
-
+@override $AssetModelCopyWith<$Res>? get featuredAsset;
 
 }
 /// @nodoc
@@ -274,19 +318,35 @@ class __$ProductModelCopyWithImpl<$Res>
 
 /// Create a copy of ProductModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? slug = null,Object? name = null,Object? description = null,Object? imageUrl = null,Object? price = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? slug = null,Object? description = freezed,Object? enabled = null,Object? featuredAsset = freezed,Object? assets = null,Object? variants = null,Object? optionGroups = null,Object? facetValues = null,}) {
   return _then(_ProductModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String,slug: null == slug ? _self.slug : slug // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
-as String,imageUrl: null == imageUrl ? _self.imageUrl : imageUrl // ignore: cast_nullable_to_non_nullable
-as String,price: null == price ? _self.price : price // ignore: cast_nullable_to_non_nullable
-as double,
+as String,slug: null == slug ? _self.slug : slug // ignore: cast_nullable_to_non_nullable
+as String,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
+as String?,enabled: null == enabled ? _self.enabled : enabled // ignore: cast_nullable_to_non_nullable
+as bool,featuredAsset: freezed == featuredAsset ? _self.featuredAsset : featuredAsset // ignore: cast_nullable_to_non_nullable
+as AssetModel?,assets: null == assets ? _self._assets : assets // ignore: cast_nullable_to_non_nullable
+as List<AssetModel>,variants: null == variants ? _self._variants : variants // ignore: cast_nullable_to_non_nullable
+as List<ProductVariantModel>,optionGroups: null == optionGroups ? _self._optionGroups : optionGroups // ignore: cast_nullable_to_non_nullable
+as List<ProductOptionGroupModel>,facetValues: null == facetValues ? _self._facetValues : facetValues // ignore: cast_nullable_to_non_nullable
+as List<FacetValueModel>,
   ));
 }
 
+/// Create a copy of ProductModel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$AssetModelCopyWith<$Res>? get featuredAsset {
+    if (_self.featuredAsset == null) {
+    return null;
+  }
 
+  return $AssetModelCopyWith<$Res>(_self.featuredAsset!, (value) {
+    return _then(_self.copyWith(featuredAsset: value));
+  });
+}
 }
 
 // dart format on

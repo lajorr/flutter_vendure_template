@@ -288,7 +288,7 @@ class _FeaturedProductsGrid extends ConsumerWidget {
             product: product,
             onTap: () => context.pushNamed(
               AppRoute.productDetail.name,
-              pathParameters: {'slug': product.slug},
+              pathParameters: {'id': product.id},
             ),
           ),
           onLoadMore:

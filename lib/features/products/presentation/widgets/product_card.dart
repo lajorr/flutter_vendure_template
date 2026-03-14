@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../domain/entities/product.dart';
-
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import '../../domain/entities/product.dart';
 
 class ProductCard extends StatelessWidget {
   final Product product;
@@ -28,9 +27,9 @@ class ProductCard extends StatelessWidget {
                     color: AppColors.neutralGray,
                   ),
                   clipBehavior: Clip.antiAlias,
-                  child: product.imageUrl.isNotEmpty
+                  child: product.assets.isNotEmpty
                       ? Image.network(
-                          product.imageUrl,
+                          product.assets.first.source,
                           fit: BoxFit.cover,
                           width: double.infinity,
                           height: double.infinity,
@@ -48,7 +47,11 @@ class ProductCard extends StatelessWidget {
                       color: Colors.white,
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(Icons.favorite_border, size: 20, color: AppColors.textSecondary),
+                    child: const Icon(
+                      Icons.favorite_border,
+                      size: 20,
+                      color: AppColors.textSecondary,
+                    ),
                   ),
                 ),
               ],
@@ -57,21 +60,28 @@ class ProductCard extends StatelessWidget {
           AppSpacing.vXS,
           const Text(
             'CATEGORY', // Hardcoded for now, would ideally come from product.collections
-            style: TextStyle(color: AppColors.textSecondary, fontSize: 10, fontWeight: FontWeight.bold, letterSpacing: 1),
+            style: TextStyle(
+              color: AppColors.textSecondary,
+              fontSize: 10,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 1,
+            ),
           ),
           AppSpacing.vXXS,
           Text(
             product.name,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.bold),
+            style: AppTextStyles.bodyLarge.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
           ),
           AppSpacing.vXXS,
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '\$${product.price.toStringAsFixed(2)}',
+                product.getFirstVariant.formattedPrice,
                 style: AppTextStyles.bodyLarge.copyWith(
                   color: AppColors.primaryNavy,
                   fontWeight: FontWeight.bold,

@@ -34,9 +34,9 @@ class ProductRepositoryImpl implements ProductRepository {
   }
 
   @override
-  Future<Either<Failure, Product>> getProductDetails(String slug) async {
+  Future<Either<Failure, Product>> getProductDetails(String id) async {
     try {
-      final model = await _remoteDataSource.getProductDetails(slug);
+      final model = await _remoteDataSource.getProductDetails(id);
       return Right(model.toEntity());
     } on ServerException catch (e) {
       return Left(ServerFailure(e.message));

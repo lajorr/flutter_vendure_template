@@ -8,5 +8,5 @@ abstract class ProductRepository {
     int take = 10,
     int skip = 0,
   });
-  Future<Either<Failure, Product>> getProductDetails(String slug);
+  Future<Either<Failure, Product>> getProductDetails(String id);
 }

@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import '../../features/dashboard/presentation/screens/dashboard_screen.dart';
 import '../../features/products/presentation/screens/product_detail_screen.dart';
 import '../../features/products/presentation/screens/product_list_screen.dart';
-
 import 'app_routes.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
@@ -27,8 +26,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             path: AppRoute.productDetail.path,
             name: AppRoute.productDetail.name,
             builder: (context, state) {
-              final slug = state.pathParameters['slug'];
-              return ProductDetailScreen(slug: slug ?? '');
+              final id = state.pathParameters['id'];
+              return ProductDetailScreen(id: id ?? '');
             },
           ),
         ],
@@ -48,8 +47,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         ),
       ),
     ],
-    errorBuilder: (context, state) => Scaffold(
-      body: Center(child: Text('Navigation Error: ${state.error}')),
-    ),
+    errorBuilder: (context, state) =>
+        Scaffold(body: Center(child: Text('Navigation Error: ${state.error}'))),
   );
 });

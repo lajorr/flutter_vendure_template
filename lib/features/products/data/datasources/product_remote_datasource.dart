@@ -6,7 +6,7 @@ import '../models/product_model.dart';
 
 abstract class ProductRemoteDataSource {
   Future<List<ProductModel>> getProducts({int take = 10, int skip = 0});
-  Future<ProductModel> getProductDetails(String slug);
+  Future<ProductModel> getProductDetails(String id);
 }
 
 final _logger = Logger();
@@ -36,10 +36,7 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
 
     try {
       final models = items
-          .map(
-            (json) =>
-                ProductModel.fromVendureJson(json as Map<String, dynamic>),
-          )
+          .map((json) => ProductModel.fromJson(json as Map<String, dynamic>))
           .toList();
       _logger.d(
         'ProductRemoteDataSourceImpl: Successfully parsed ${models.length} products',
@@ -56,10 +53,10 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
   }
 
   @override
-  Future<ProductModel> getProductDetails(String slug) async {
+  Future<ProductModel> getProductDetails(String id) async {
     final data = await _graphqlService.performQuery(
       ProductQueries.getProductDetails,
-      variables: {'slug': slug},
+      variables: {'id': id},
     );
 
     final productData = data?['product'];
@@ -67,6 +64,6 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
       throw Exception('Product not found');
     }
 
-    return ProductModel.fromVendureJson(productData as Map<String, dynamic>);
+    return ProductModel.fromJson(productData as Map<String, dynamic>);
   }
 }

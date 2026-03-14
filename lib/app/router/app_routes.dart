@@ -1,7 +1,7 @@
 enum AppRoute {
   dashboard('/dashboard'),
   products('products'),
-  productDetail('product-detail/:slug'),
+  productDetail('product-detail/:id'),
   checkout('/checkout'),
   orders('/orders');
 

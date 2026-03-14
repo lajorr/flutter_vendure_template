@@ -67,9 +67,9 @@ class ProductsController extends _$ProductsController {
 }
 
 @riverpod
-Future<Product> productDetails(Ref ref, String slug) async {
+Future<Product> productDetails(Ref ref, String id) async {
   final useCase = ref.watch(getProductDetailsUseCaseProvider);
-  final result = await useCase.execute(slug);
+  final result = await useCase.execute(id);
 
   return result.fold(
     (failure) => throw Exception(failure.message),

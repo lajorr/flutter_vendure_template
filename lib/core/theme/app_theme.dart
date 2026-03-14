@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+
 import 'app_colors.dart';
-import 'app_text_styles.dart';
 import 'app_spacing.dart';
+import 'app_text_styles.dart';
 
 class AppTheme {
   static ThemeData get lightTheme {
@@ -50,7 +51,9 @@ class AppTheme {
         color: AppColors.surface,
         elevation: 0,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(AppSpacing.radiusCard)),
+          borderRadius: BorderRadius.all(
+            Radius.circular(AppSpacing.radiusCard),
+          ),
           side: BorderSide(color: AppColors.neutralGray, width: 1),
         ),
       ),

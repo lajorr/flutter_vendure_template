@@ -7,11 +7,39 @@ class ProductQueries {
           name
           slug
           description
+          enabled
           assets {
+            id
             preview
+            source
           }
           variants {
+            id
             priceWithTax
+            price
+            name
+            sku
+            featuredAsset{
+              id
+              source
+              preview
+            }
+            assets{
+              id
+              source
+              preview
+            }
+            options{
+              id
+              name
+              code
+            }
+            stockLevel
+            facetValues{
+              id
+              name
+              code
+            }
           }
         }
         totalItems
@@ -20,20 +48,45 @@ class ProductQueries {
   ''';
 
   static const String getProductDetails = r'''
-    query GetProductDetails($slug: String!) {
-      product(slug: $slug) {
+    query GetProductDetails($id: ID!) {
+      product(id: $id) {
         id
         name
         slug
         description
+        enabled
         assets {
+          id
           preview
+          source
         }
         variants {
           id
-          name
           priceWithTax
-          currencyCode
+          price
+          name
+          sku
+          featuredAsset{
+            id
+            source
+            preview
+          }
+          assets{
+            id
+            source
+            preview
+          }
+          options{
+            id
+            name
+            code
+          }
+          stockLevel
+          facetValues{
+            id
+            name
+            code
+          }
         }
       }
     }

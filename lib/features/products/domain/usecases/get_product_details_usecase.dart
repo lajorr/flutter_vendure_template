@@ -11,10 +11,10 @@ class GetProductDetailsUseCase implements UseCase<Product, String> {
   GetProductDetailsUseCase(this._repository);
 
   @override
-  Future<Either<Failure, Product>> execute(String slug) {
-    if (slug.isEmpty) {
-      return Future.value(const Left(ServerFailure('Slug cannot be empty')));
+  Future<Either<Failure, Product>> execute(String id) {
+    if (id.isEmpty) {
+      return Future.value(const Left(ServerFailure('Id cannot be empty')));
     }
-    return _repository.getProductDetails(slug);
+    return _repository.getProductDetails(id);
   }
 }
