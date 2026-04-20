@@ -25,7 +25,6 @@ abstract class ProductVariantModel with _$ProductVariantModel {
     AssetModel? featuredAsset,
     @Default([]) List<AssetModel> assets,
     String? stockLevel,
-    // @Default([]) List<StockLevelModel> stockLevels,
     @JsonKey(name: "options")
     @Default([])
     List<ProductOptionValueModel> optionValues,

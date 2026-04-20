@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vendure_flutter_app/features/cart/application/controllers/cart_controller.dart';
+import 'package:vendure_flutter_app/features/cart/application/controllers/cart_item_controller.dart';
+import 'package:vendure_flutter_app/features/cart/application/controllers/cart_item_state.dart';
 import 'package:vendure_flutter_app/features/cart/application/controllers/cart_state.dart';
 import 'package:vendure_flutter_app/features/cart/domain/entities/active_order.dart';
 import 'package:vendure_flutter_app/features/cart/domain/entities/cart_item_data.dart';
@@ -39,9 +41,14 @@ class _CartScreenState extends ConsumerState<CartScreen> {
     return lines.map((line) {
       final variant = line.productVariant;
       return CartItemData(
+        id: line.id,
         name: variant?.name ?? 'Product',
-        variantLabel: variant?.name ?? '', // Or line.id if no label available
-        imageUrl: variant?.previewImage ?? "",
+        variantLabel: variant?.name ?? '',
+        imageUrl:
+            line.featuredAsset?.preview ??
+            line.featuredAsset?.source ??
+            variant?.previewImage ??
+            "",
         price: line.unitPriceWithTax / 100,
         quantity: line.quantity,
       );
@@ -51,6 +58,17 @@ class _CartScreenState extends ConsumerState<CartScreen> {
   @override
   Widget build(BuildContext context) {
     final cartState = ref.watch(cartControllerProvider);
+
+    ref.listen(cartItemControllerProvider, (previous, next) {
+      next.maybeWhen(
+        error: (message) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(message), backgroundColor: Colors.red),
+          );
+        },
+        orElse: () {},
+      );
+    });
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -123,7 +141,32 @@ class _CartScreenState extends ConsumerState<CartScreen> {
           ),
         ),
 
-        IconButton(icon: const Icon(Icons.more_horiz), onPressed: () {}),
+        PopupMenuButton<String>(
+          icon: const Icon(Icons.more_horiz),
+          menuPadding: EdgeInsetsGeometry.zero,
+          color: AppColors.neutralGray,
+          onSelected: (value) {
+            if (value == 'delete_all') {
+              ref
+                  .read(cartItemControllerProvider.notifier)
+                  .removeAllOrderLine();
+            }
+          },
+          itemBuilder: (context) => [
+            PopupMenuItem(
+              value: 'delete_all',
+              enabled: itemCount > 0,
+              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              child: Text(
+                'Delete all',
+                style: AppTextStyles.bodySmall.copyWith(
+                  color: AppColors.error,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ],
+        ),
         AppSpacing.hXS,
       ],
     );

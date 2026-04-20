@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:vendure_flutter_app/features/cart/application/controllers/cart_item_controller.dart';
 import 'package:vendure_flutter_app/features/products/domain/entities/product.dart';
 import 'package:vendure_flutter_app/features/products/domain/entities/product_variant.dart';
 import 'package:vendure_flutter_app/features/products/presentation/widgets/product_detail_content.dart';
 import 'package:vendure_flutter_app/features/products/presentation/widgets/sticky_footer.dart';
 
-import '../../../cart/application/controllers/cart_controller.dart';
 import '../../../cart/application/controllers/cart_item_state.dart';
 import '../../application/controllers/products_controller.dart';
 
@@ -131,7 +131,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
               },
               inStock: _isInStock(selectedVariant),
               isLoading: cartItemState.maybeWhen(
-                loading: (variantId) => variantId == selectedVariant?.id,
+                loading: (variantId, _) => variantId == selectedVariant?.id,
                 orElse: () => false,
               ),
             );

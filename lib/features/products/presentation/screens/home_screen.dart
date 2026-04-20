@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:vendure_flutter_app/features/collections/application/controllers/collection_controllers.dart';
 import 'package:vendure_flutter_app/features/products/domain/entities/product.dart';
+import 'package:vendure_flutter_app/features/products/presentation/widgets/home_app_bar.dart';
 import 'package:vendure_flutter_app/features/products/presentation/widgets/product_card.dart';
 import 'package:vendure_flutter_app/shared/widgets/app_async_grid.dart';
 import 'package:vendure_flutter_app/shared/widgets/common_shimmer.dart';
@@ -12,7 +13,6 @@ import '../../../../app/router/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_text_styles.dart';
-import '../../../dashboard/application/dashboard_controller.dart';
 import '../../application/controllers/products_controller.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -30,7 +30,7 @@ class HomeScreen extends ConsumerWidget {
           },
           child: CustomScrollView(
             slivers: [
-              const _HomeAppBar(),
+              const HomeAppBar(),
               const _SearchBar(),
               SliverToBoxAdapter(child: SizedBox(height: AppSpacing.xs)),
               const _PromoBanner(),
@@ -49,66 +49,6 @@ class HomeScreen extends ConsumerWidget {
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class _HomeAppBar extends ConsumerWidget {
-  const _HomeAppBar();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return SliverToBoxAdapter(
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.m),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                const Icon(Icons.shopping_bag, color: AppColors.primaryNavy),
-                AppSpacing.hXS,
-                Text(
-                  'Vendure',
-                  style: AppTextStyles.h2.copyWith(
-                    color: AppColors.primaryNavy,
-                  ),
-                ),
-              ],
-            ),
-            Stack(
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.shopping_cart_outlined),
-                  onPressed: () => ref
-                      .read(dashboardControllerProvider.notifier)
-                      .setIndex(DashboardTabs.cart),
-                ),
-                Positioned(
-                  right: 8,
-                  top: 8,
-                  child: Container(
-                    padding: const EdgeInsets.all(2),
-                    decoration: const BoxDecoration(
-                      color: AppColors.primaryNavy,
-                      shape: BoxShape.circle,
-                    ),
-                    constraints: const BoxConstraints(
-                      minWidth: 16,
-                      minHeight: 16,
-                    ),
-                    child: const Text(
-                      '0',
-                      style: TextStyle(color: Colors.white, fontSize: 10),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
         ),
       ),
     );

@@ -9,4 +9,15 @@ abstract class CartRepository {
     required String productVariantId,
     required int quantity,
   });
+
+  Future<Either<Failure, ActiveOrder>> adjustOrderItemQuantity({
+    required String orderLineId,
+    required int quantity,
+  });
+
+  Future<Either<Failure, ActiveOrder>> removeOrderLine({
+    required String orderLineId,
+  });
+
+  Future<Either<Failure, ActiveOrder>> removeAllOrderLine();
 }

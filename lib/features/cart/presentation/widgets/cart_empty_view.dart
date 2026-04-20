@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:vendure_flutter_app/app/router/app_routes.dart';
 import 'package:vendure_flutter_app/core/theme/app_colors.dart';
 import 'package:vendure_flutter_app/core/theme/app_spacing.dart';
 import 'package:vendure_flutter_app/core/theme/app_text_styles.dart';
+import 'package:vendure_flutter_app/features/dashboard/application/dashboard_controller.dart';
 
-class CartEmptyView extends StatelessWidget {
+class CartEmptyView extends ConsumerWidget {
   const CartEmptyView({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(AppSpacing.l),
@@ -43,7 +46,11 @@ class CartEmptyView extends StatelessWidget {
             ),
             AppSpacing.vL,
             FilledButton.icon(
-              onPressed: () {},
+              onPressed: () {
+                ref
+                    .read(dashboardControllerProvider.notifier)
+                    .setIndex(DashboardTabs.home);
+              },
               icon: const Icon(Icons.storefront_outlined),
               label: const Text('Continue Shopping'),
             ),

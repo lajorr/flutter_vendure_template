@@ -1,12 +1,12 @@
 import 'package:dartz/dartz.dart';
+import 'package:vendure_flutter_app/core/errors/repository_exception_handler.dart';
 
-import '../../../../core/errors/exceptions.dart';
 import '../../../../core/errors/failures.dart';
 import '../../domain/entities/product.dart';
 import '../../domain/repositories/product_repository.dart';
 import '../datasources/product_remote_datasource.dart';
 
-class ProductRepositoryImpl implements ProductRepository {
+class ProductRepositoryImpl with RepositoryExceptionMixin implements ProductRepository {
   final ProductRemoteDataSource _remoteDataSource;
 
   ProductRepositoryImpl(this._remoteDataSource);
@@ -16,36 +16,20 @@ class ProductRepositoryImpl implements ProductRepository {
     int take = 10,
     int skip = 0,
   }) async {
-    try {
+    return exceptionHandler(() async {
       final models = await _remoteDataSource.getProducts(
         take: take,
         skip: skip,
       );
-      return Right(models.map((m) => m.toEntity()).toList());
-    } on ServerException catch (e) {
-      return Left(ServerFailure(e.message));
-    } on NetworkException catch (e) {
-      return Left(NetworkFailure(e.message));
-    } on AppTimeoutException catch (e) {
-      return Left(TimeoutFailure(e.message));
-    } catch (e) {
-      return Left(ServerFailure(e.toString()));
-    }
+      return models.map((m) => m.toEntity()).toList();
+    });
   }
 
   @override
   Future<Either<Failure, Product>> getProductDetails(String id) async {
-    try {
+    return exceptionHandler(() async {
       final model = await _remoteDataSource.getProductDetails(id);
-      return Right(model.toEntity());
-    } on ServerException catch (e) {
-      return Left(ServerFailure(e.message));
-    } on NetworkException catch (e) {
-      return Left(NetworkFailure(e.message));
-    } on AppTimeoutException catch (e) {
-      return Left(TimeoutFailure(e.message));
-    } catch (e) {
-      return Left(ServerFailure(e.toString()));
-    }
+      return model.toEntity();
+    });
   }
 }

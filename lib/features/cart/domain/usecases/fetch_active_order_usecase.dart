@@ -5,7 +5,7 @@ import '../../../../core/usecases/usecase.dart';
 import '../entities/active_order.dart';
 import '../repositories/cart_repository.dart';
 
-class FetchActiveOrderUseCase implements UseCase<ActiveOrder?, NoParams> {
+class FetchActiveOrderUseCase implements Usecase<ActiveOrder?, NoParams> {
   final CartRepository _repository;
 
   FetchActiveOrderUseCase(this._repository);

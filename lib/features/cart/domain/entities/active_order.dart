@@ -1,4 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:vendure_flutter_app/features/products/domain/entities/asset.dart';
+
 import '../../../../features/products/domain/entities/product_variant.dart';
 
 part 'active_order.freezed.dart';
@@ -64,6 +66,7 @@ abstract class ActiveOrderLine with _$ActiveOrderLine {
     @Default(0) int linePriceWithTax,
     @Default(0) int discountedLinePrice,
     dynamic customFields,
+    Asset? featuredAsset,
     ProductVariant? productVariant,
   }) = _ActiveOrderLine;
 }

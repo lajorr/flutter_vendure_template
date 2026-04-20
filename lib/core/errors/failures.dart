@@ -24,3 +24,7 @@ class TimeoutFailure extends Failure {
 class CacheFailure extends Failure {
   const CacheFailure(super.message);
 }
+
+class InsufficientStockFailure extends Failure {
+  const InsufficientStockFailure(super.message);
+}

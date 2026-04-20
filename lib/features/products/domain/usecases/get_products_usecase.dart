@@ -5,7 +5,7 @@ import '../../../../core/usecases/usecase.dart';
 import '../entities/product.dart';
 import '../repositories/product_repository.dart';
 
-class GetProductsUseCase implements UseCase<List<Product>, ProductsParams> {
+class GetProductsUseCase implements Usecase<List<Product>, ProductsParams> {
   final ProductRepository _repository;
 
   GetProductsUseCase(this._repository);

@@ -1,5 +1,6 @@
 class CartItemData {
   const CartItemData({
+    required this.id,
     required this.name,
     required this.variantLabel,
     required this.imageUrl,
@@ -7,6 +8,7 @@ class CartItemData {
     required this.quantity,
   });
 
+  final String id;
   final String name;
   final String variantLabel;
   final String imageUrl;

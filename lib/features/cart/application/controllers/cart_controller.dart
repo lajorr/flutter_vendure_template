@@ -1,9 +1,8 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:vendure_flutter_app/core/usecases/usecase.dart';
-import 'package:vendure_flutter_app/features/cart/application/controllers/cart_item_state.dart';
 import 'package:vendure_flutter_app/features/cart/application/controllers/cart_state.dart';
 import 'package:vendure_flutter_app/features/cart/application/providers/cart_providers.dart';
-import 'package:vendure_flutter_app/features/cart/domain/usecases/add_item_to_order_usecase.dart';
+import 'package:vendure_flutter_app/features/cart/domain/entities/active_order.dart';
 
 part 'cart_controller.g.dart';
 
@@ -30,44 +29,8 @@ class CartController extends _$CartController {
       },
     );
   }
-}
 
-@riverpod
-class CartItemController extends _$CartItemController {
-  @override
-  CartItemState build() {
-    return CartItemState.initial();
-  }
-
-  Future<void> addItemToOrder({
-    required String variantId,
-    required int quantity,
-  }) async {
-    final cartState = ref.read(cartControllerProvider);
-    final activeOrderState = cartState.activeOrderState;
-
-    state = CartItemState.loading(variantId);
-
-    if (activeOrderState != ActiveOrderStateEnum.addingItems) {
-      // TODO: transition to adding items
-      state = CartItemState.error("Arranging payment statte");
-      return;
-    }
-
-    final result = await ref
-        .read(addItemToOrderUsecaseProvider)
-        .execute(
-          AddItemToOrderUseCaseParams(variantId: variantId, quantity: quantity),
-        );
-
-    result.fold(
-      (failure) {
-        state = CartItemState.error(failure.message);
-      },
-      (success) {
-        state = CartItemState.success();
-        ref.read(cartControllerProvider.notifier).fetchActiveOrder();
-      },
-    );
+  void updateActiveOrder(ActiveOrder updatedActiveOrder) {
+    state = CartState.success(activeOrder: updatedActiveOrder);
   }
 }

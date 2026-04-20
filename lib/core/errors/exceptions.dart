@@ -23,3 +23,13 @@ class AppTimeoutException implements Exception {
 }
 
 class CacheException implements Exception {}
+
+class InsufficientStockException implements Exception {}
+
+class OrderInterceptorException implements Exception {
+  final String message;
+  OrderInterceptorException(this.message);
+
+  @override
+  String toString() => message;
+}

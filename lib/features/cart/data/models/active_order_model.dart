@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../../../../features/products/data/models/asset_model.dart';
 import '../../../../features/products/data/models/product_variant_model.dart';
 import '../../domain/entities/active_order.dart';
 
@@ -122,6 +123,7 @@ abstract class ActiveOrderLineModel with _$ActiveOrderLineModel {
     @Default(0) int linePriceWithTax,
     @Default(0) int discountedLinePrice,
     dynamic customFields,
+    AssetModel? featuredAsset,
     ProductVariantModel? productVariant,
   }) = _ActiveOrderLineModel;
 
@@ -140,6 +142,7 @@ abstract class ActiveOrderLineModel with _$ActiveOrderLineModel {
     linePriceWithTax: linePriceWithTax,
     discountedLinePrice: discountedLinePrice,
     customFields: customFields,
+    featuredAsset: featuredAsset?.toEntity(),
     productVariant: productVariant?.toEntity(),
   );
 }

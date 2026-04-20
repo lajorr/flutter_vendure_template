@@ -19,39 +19,46 @@ class ProductCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Stack(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(AppSpacing.radiusCard),
+          Expanded(
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(AppSpacing.radiusCard),
+                    ),
+                    color: AppColors.neutralGray,
                   ),
-                  color: AppColors.neutralGray,
+                  clipBehavior: Clip.antiAlias,
+                  child: product.assets.isNotEmpty
+                      ? AppCachedNetworkImage(
+                          imageUrl: product.assets.first.source,
+                          height: double.infinity,
+                          width: double.infinity,
+                        )
+                      : const Center(
+                          child: Icon(Icons.image_not_supported, size: 40),
+                        ),
                 ),
-                clipBehavior: Clip.antiAlias,
-                child: product.assets.isNotEmpty
-                    ? AppCachedNetworkImage(
-                        imageUrl: product.assets.first.source,
-                      )
-                    : const Center(child: Icon(Icons.image_not_supported)),
-              ),
-              Positioned(
-                top: 8,
-                right: 8,
-                child: Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.favorite_border,
-                    size: 20,
-                    color: AppColors.textSecondary,
+                Positioned(
+                  top: 8,
+                  right: 8,
+                  child: Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.favorite_border,
+                      size: 20,
+                      color: AppColors.textSecondary,
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           DecoratedBox(
             decoration: BoxDecoration(
@@ -61,21 +68,21 @@ class ProductCard extends StatelessWidget {
               ),
             ),
             child: Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(AppSpacing.xs),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  AppSpacing.vXS,
                   const Text(
-                    'CATEGORY', // Hardcoded for now, would ideally come from product.collections
+                    'CATEGORY',
                     style: TextStyle(
                       color: AppColors.textSecondary,
-                      fontSize: 10,
+                      fontSize: 8,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 1,
                     ),
                   ),
-                  AppSpacing.vXXS,
+                  const SizedBox(height: 2),
                   Text(
                     product.name,
                     maxLines: 1,
@@ -84,27 +91,31 @@ class ProductCard extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  AppSpacing.vXXS,
+                  const SizedBox(height: 4),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        product.getFirstVariant.formattedPrice,
-                        style: AppTextStyles.bodyLarge.copyWith(
-                          color: AppColors.primaryNavy,
-                          fontWeight: FontWeight.bold,
+                      Flexible(
+                        child: Text(
+                          product.getFirstVariant.formattedPrice,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: AppTextStyles.bodySmall.copyWith(
+                            color: AppColors.primaryNavy,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                       Container(
                         padding: const EdgeInsets.all(4),
                         decoration: BoxDecoration(
                           color: AppColors.primaryNavy,
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(6),
                         ),
                         child: const Icon(
                           Icons.add,
                           color: Colors.white,
-                          size: 20,
+                          size: 16,
                         ),
                       ),
                     ],
