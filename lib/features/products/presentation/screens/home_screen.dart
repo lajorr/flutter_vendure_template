@@ -1,6 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:vendure_flutter_app/features/collections/application/controllers/collection_controllers.dart';
 import 'package:vendure_flutter_app/shared/widgets/common_grid_view.dart';
 import 'package:vendure_flutter_app/shared/widgets/common_shimmer.dart';
 
@@ -8,7 +10,6 @@ import '../../../../app/router/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_text_styles.dart';
-import '../../../collections/application/providers/collection_providers.dart';
 import '../../../dashboard/application/dashboard_controller.dart';
 import '../../application/controllers/products_controller.dart';
 import '../../domain/entities/product.dart';
@@ -25,7 +26,7 @@ class HomeScreen extends ConsumerWidget {
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: () async {
-            ref.invalidate(collectionsListProvider);
+            await ref.read(collectionControllersProvider.notifier).refresh();
             await ref.read(productsControllerProvider.notifier).refresh();
           },
           child: CustomScrollView(
@@ -35,6 +36,8 @@ class HomeScreen extends ConsumerWidget {
               const _PromoBanner(),
               const _CollectionSection(),
               const _FeaturedProductsHeader(),
+              // const _FeaturedProductsHorizontalListView(),
+              // const _FeaturedProductsHeader(),
               const _FeaturedProductsGrid(),
             ],
           ),
@@ -162,7 +165,7 @@ class _CollectionSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final collectionsAsync = ref.watch(collectionsListProvider);
+    final collectionsAsync = ref.watch(collectionControllersProvider);
 
     return SliverToBoxAdapter(
       child: Column(
@@ -185,7 +188,7 @@ class _CollectionSection extends ConsumerWidget {
             ),
           ),
           SizedBox(
-            height: 110,
+            height: 100,
             child: collectionsAsync.when(
               data: (collections) => ListView.separated(
                 padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
@@ -207,7 +210,7 @@ class _CollectionSection extends ConsumerWidget {
                           backgroundImage:
                               collection.imageUrl != null &&
                                   collection.imageUrl!.isNotEmpty
-                              ? NetworkImage(collection.imageUrl!)
+                              ? CachedNetworkImageProvider(collection.imageUrl!)
                               : null,
                           child:
                               collection.imageUrl == null ||
@@ -263,10 +266,27 @@ class _FeaturedProductsHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const SliverToBoxAdapter(
+    return SliverToBoxAdapter(
       child: Padding(
-        padding: EdgeInsets.all(AppSpacing.m),
-        child: Text('Featured Products', style: AppTextStyles.h2),
+        padding: EdgeInsets.fromLTRB(
+          AppSpacing.m,
+          AppSpacing.m,
+          AppSpacing.m,
+          0,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('Featured Products', style: AppTextStyles.h2),
+            TextButton(
+              onPressed: () {},
+              child: Text(
+                'View all',
+                style: TextStyle(color: AppColors.primaryNavy),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -293,7 +313,7 @@ class _FeaturedProductsGrid extends ConsumerWidget {
           ),
           onLoadMore:
               () {}, // No pagination needed here as it's a featured list
-          childAspectRatio: 0.65,
+          childAspectRatio: 0.7,
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
         );
       },
@@ -314,6 +334,45 @@ class _FeaturedProductsGrid extends ConsumerWidget {
       ),
       error: (e, _) => const SliverToBoxAdapter(
         child: Center(child: Text('Error loading products')),
+      ),
+    );
+  }
+}
+
+class _FeaturedProductsHorizontalListView extends ConsumerWidget {
+  const _FeaturedProductsHorizontalListView();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final productsState = ref.watch(productsControllerProvider);
+
+    return productsState.when(
+      data: (List<Product> products) {
+        final displayProducts = products.take(4).toList();
+        return SliverPadding(
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
+
+          sliver: SliverToBoxAdapter(
+            child: SizedBox(
+              height: 300,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                itemCount: 4,
+                separatorBuilder: (context, index) => AppSpacing.hM,
+                itemBuilder: (context, index) => SizedBox(
+                  width: 182,
+                  child: ProductCard(product: products[index], onTap: () {}),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+      error: (e, _) => const SliverToBoxAdapter(
+        child: Center(child: Text('Error loading products')),
+      ),
+      loading: () => const SliverToBoxAdapter(
+        child: Center(child: Text(' loading products')),
       ),
     );
   }

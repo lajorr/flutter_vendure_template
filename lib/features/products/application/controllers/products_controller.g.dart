@@ -103,7 +103,7 @@ final class ProductDetailsProvider
   }
 }
 
-String _$productDetailsHash() => r'96524749130f37b9489bb93e22771bd5384e92b8';
+String _$productDetailsHash() => r'e282db931c322bdc46ea378a0ec64ba2d94c8836';
 
 final class ProductDetailsFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<Product>, String> {
@@ -116,8 +116,8 @@ final class ProductDetailsFamily extends $Family
         isAutoDispose: true,
       );
 
-  ProductDetailsProvider call(String slug) =>
-      ProductDetailsProvider._(argument: slug, from: this);
+  ProductDetailsProvider call(String id) =>
+      ProductDetailsProvider._(argument: id, from: this);
 
   @override
   String toString() => r'productDetailsProvider';
