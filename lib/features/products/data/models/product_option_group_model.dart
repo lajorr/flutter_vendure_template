@@ -11,7 +11,10 @@ abstract class ProductOptionGroupModel with _$ProductOptionGroupModel {
   const factory ProductOptionGroupModel({
     required String id,
     required String name,
-    required List<ProductOptionModel> options,
+    String? code,
+    int? productCount,
+    dynamic customFields,
+    @Default([]) List<ProductOptionModel> options,
   }) = _ProductOptionGroupModel;
 
   factory ProductOptionGroupModel.fromJson(Map<String, dynamic> json) =>
@@ -22,6 +25,8 @@ abstract class ProductOptionGroupModel with _$ProductOptionGroupModel {
   ProductOptionGroup toEntity() => ProductOptionGroup(
     id: id,
     name: name,
+    code: code,
+    productCount: productCount,
     options: options.map((e) => e.toEntity()).toList(),
   );
 }

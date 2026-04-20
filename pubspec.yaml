@@ -6,6 +6,10 @@ version: 0.1.0+1
 environment:
   sdk: ^3.11.0
 
+
+scripts:
+  build: dart run build_runner build --delete-conflicting-outputs          
+
 dependencies:
   dartz: ^0.10.1
   equatable: ^2.0.8
@@ -20,6 +24,7 @@ dependencies:
   riverpod_annotation: ^4.0.2
   shimmer: ^3.0.0
   cached_network_image: ^3.4.1
+  flutter_secure_storage: ^9.2.2
 
 dev_dependencies:
   flutter_test:

@@ -54,11 +54,11 @@ extension ProductX on Product {
 
 extension ProductVariantX on ProductVariant? {
   String get formattedPrice {
-    final currency = "Rs.";
+    final currency = "\$";
     if (this == null) {
       return "";
     }
     final price = (this!.price / 100).toStringAsFixed(2);
-    return "$currency $price";
+    return "$currency$price";
   }
 }

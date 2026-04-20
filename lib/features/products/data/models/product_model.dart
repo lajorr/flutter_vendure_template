@@ -13,10 +13,14 @@ part 'product_model.g.dart';
 abstract class ProductModel with _$ProductModel {
   const factory ProductModel({
     required String id,
+    String? createdAt,
+    String? updatedAt,
+    String? languageCode,
     required String name,
     required String slug,
     String? description,
     @Default(true) bool enabled,
+    dynamic customFields,
     AssetModel? featuredAsset,
     @Default([]) List<AssetModel> assets,
     @Default([]) List<ProductVariantModel> variants,

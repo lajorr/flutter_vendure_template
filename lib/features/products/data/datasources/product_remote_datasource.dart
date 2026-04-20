@@ -24,6 +24,7 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
     final data = await _graphqlService.performQuery(
       ProductQueries.getProducts,
       variables: {'take': take, 'skip': skip},
+      operationName: 'GetProducts',
     );
 
     final items = data?['products']?['items'] as List<dynamic>?;
@@ -57,6 +58,7 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
     final data = await _graphqlService.performQuery(
       ProductQueries.getProductDetails,
       variables: {'id': id},
+      operationName: 'GetProductDetails',
     );
 
     final productData = data?['product'];

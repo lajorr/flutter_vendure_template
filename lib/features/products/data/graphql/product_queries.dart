@@ -4,42 +4,72 @@ class ProductQueries {
       products(options: { take: $take, skip: $skip }) {
         items {
           id
+          createdAt
+          updatedAt
+          languageCode
           name
           slug
           description
           enabled
+          customFields
+          featuredAsset {
+            id
+            source
+            preview
+          }
           assets {
             id
-            preview
             source
+            preview
           }
           variants {
-            id
-            priceWithTax
-            price
-            name
-            sku
-            featuredAsset{
               id
-              source
-              preview
-            }
-            assets{
-              id
-              source
-              preview
-            }
-            options{
-              id
+              productId
+              createdAt
+              updatedAt
+              languageCode
+              sku
               name
-              code
-            }
-            stockLevel
-            facetValues{
+              price
+              currencyCode
+              priceWithTax
+              stockLevel
+              customFields
+              featuredAsset {
+                id
+                source
+                preview
+              }
+              assets {
+                id
+                source
+                preview
+              }
+              options {
+                  id
+                  createdAt
+                  updatedAt
+                  languageCode
+                  code
+                  name
+                  groupId
+                  customFields
+              }
+          }
+          optionGroups {
               id
-              name
+              createdAt
+              updatedAt
+              languageCode
               code
-            }
+              name
+              productCount
+              customFields
+              options {
+                  id
+                  code
+                  name
+              }
           }
         }
         totalItems
@@ -55,6 +85,11 @@ class ProductQueries {
         slug
         description
         enabled
+        featuredAsset {
+          id
+          preview
+          source
+        }
         assets {
           id
           preview
@@ -86,6 +121,17 @@ class ProductQueries {
             id
             name
             code
+          }
+        }
+        optionGroups {
+          id
+          code
+          name
+          productCount
+          options {
+            id
+            code
+            name
           }
         }
       }

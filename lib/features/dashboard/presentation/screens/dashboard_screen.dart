@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import '../../../cart/presentation/screens/cart_screen.dart';
 import '../../../products/presentation/screens/home_screen.dart';
 import '../../application/dashboard_controller.dart';
 
@@ -23,11 +24,7 @@ class DashboardScreen extends ConsumerWidget {
           ),
         ),
       ),
-      const Scaffold(
-        body: Center(
-          child: Text('Cart Screen (Pending Layout)', style: AppTextStyles.h1),
-        ),
-      ),
+      const CartScreen(),
       const Scaffold(
         body: Center(
           child: Text(

@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:vendure_flutter_app/features/collections/application/controllers/collection_controllers.dart';
-import 'package:vendure_flutter_app/shared/widgets/common_grid_view.dart';
+import 'package:vendure_flutter_app/features/products/domain/entities/product.dart';
+import 'package:vendure_flutter_app/features/products/presentation/widgets/product_card.dart';
+import 'package:vendure_flutter_app/shared/widgets/app_async_grid.dart';
 import 'package:vendure_flutter_app/shared/widgets/common_shimmer.dart';
 
 import '../../../../app/router/app_routes.dart';
@@ -12,9 +14,6 @@ import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../dashboard/application/dashboard_controller.dart';
 import '../../application/controllers/products_controller.dart';
-import '../../domain/entities/product.dart';
-import '../widgets/product_card.dart';
-import '../widgets/product_card_shimmer.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -33,12 +32,21 @@ class HomeScreen extends ConsumerWidget {
             slivers: [
               const _HomeAppBar(),
               const _SearchBar(),
+              SliverToBoxAdapter(child: SizedBox(height: AppSpacing.xs)),
               const _PromoBanner(),
               const _CollectionSection(),
-              const _FeaturedProductsHeader(),
-              // const _FeaturedProductsHorizontalListView(),
-              // const _FeaturedProductsHeader(),
-              const _FeaturedProductsGrid(),
+              SliverToBoxAdapter(child: SizedBox(height: AppSpacing.m)),
+              AppAsyncGrid<Product>(
+                sectionTitle: 'Featured Products',
+                state: ref.watch(productsControllerProvider),
+                itemBuilder: (context, product) => ProductCard(
+                  product: product,
+                  onTap: () => context.pushNamed(
+                    AppRoute.productDetail.name,
+                    pathParameters: {'id': product.id},
+                  ),
+                ),
+              ),
             ],
           ),
         ),
@@ -142,7 +150,7 @@ class _PromoBanner extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
       child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.m),
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
         child: Container(
           height: 180,
           decoration: BoxDecoration(
@@ -256,123 +264,6 @@ class _CollectionSection extends ConsumerWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _FeaturedProductsHeader extends StatelessWidget {
-  const _FeaturedProductsHeader();
-
-  @override
-  Widget build(BuildContext context) {
-    return SliverToBoxAdapter(
-      child: Padding(
-        padding: EdgeInsets.fromLTRB(
-          AppSpacing.m,
-          AppSpacing.m,
-          AppSpacing.m,
-          0,
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text('Featured Products', style: AppTextStyles.h2),
-            TextButton(
-              onPressed: () {},
-              child: Text(
-                'View all',
-                style: TextStyle(color: AppColors.primaryNavy),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _FeaturedProductsGrid extends ConsumerWidget {
-  const _FeaturedProductsGrid();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final productsState = ref.watch(productsControllerProvider);
-
-    return productsState.when(
-      data: (products) {
-        // final displayProducts = products.take(4).toList();
-        return CommonGridView<Product>(
-          items: products,
-          itemBuilder: (context, product) => ProductCard(
-            product: product,
-            onTap: () => context.pushNamed(
-              AppRoute.productDetail.name,
-              pathParameters: {'id': product.id},
-            ),
-          ),
-          onLoadMore:
-              () {}, // No pagination needed here as it's a featured list
-          childAspectRatio: 0.7,
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
-        );
-      },
-      loading: () => SliverPadding(
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
-        sliver: SliverGrid(
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            childAspectRatio: 0.65,
-            crossAxisSpacing: AppSpacing.m,
-            mainAxisSpacing: AppSpacing.m,
-          ),
-          delegate: SliverChildBuilderDelegate(
-            (context, index) => const ProductCardShimmer(),
-            childCount: 4,
-          ),
-        ),
-      ),
-      error: (e, _) => const SliverToBoxAdapter(
-        child: Center(child: Text('Error loading products')),
-      ),
-    );
-  }
-}
-
-class _FeaturedProductsHorizontalListView extends ConsumerWidget {
-  const _FeaturedProductsHorizontalListView();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final productsState = ref.watch(productsControllerProvider);
-
-    return productsState.when(
-      data: (List<Product> products) {
-        final displayProducts = products.take(4).toList();
-        return SliverPadding(
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
-
-          sliver: SliverToBoxAdapter(
-            child: SizedBox(
-              height: 300,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                itemCount: 4,
-                separatorBuilder: (context, index) => AppSpacing.hM,
-                itemBuilder: (context, index) => SizedBox(
-                  width: 182,
-                  child: ProductCard(product: products[index], onTap: () {}),
-                ),
-              ),
-            ),
-          ),
-        );
-      },
-      error: (e, _) => const SliverToBoxAdapter(
-        child: Center(child: Text('Error loading products')),
-      ),
-      loading: () => const SliverToBoxAdapter(
-        child: Center(child: Text(' loading products')),
       ),
     );
   }

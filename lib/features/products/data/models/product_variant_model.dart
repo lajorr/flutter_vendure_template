@@ -12,9 +12,16 @@ part 'product_variant_model.g.dart';
 abstract class ProductVariantModel with _$ProductVariantModel {
   const factory ProductVariantModel({
     required String id,
+    String? productId,
+    String? createdAt,
+    String? updatedAt,
+    String? languageCode,
     required String name,
     required String sku,
     required int price,
+    int? priceWithTax,
+    String? currencyCode,
+    dynamic customFields,
     AssetModel? featuredAsset,
     @Default([]) List<AssetModel> assets,
     String? stockLevel,

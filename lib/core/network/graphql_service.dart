@@ -1,30 +1,42 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:vendure_flutter_app/core/network/session_provider.dart';
 
 import '../errors/exceptions.dart' as app_exceptions;
 
 abstract class GraphQLService {
-  Future<dynamic> performQuery(String query, {Map<String, dynamic>? variables});
+  Future<dynamic> performQuery(
+    String query, {
+    Map<String, dynamic>? variables,
+    required String operationName,
+  });
   Future<dynamic> performMutation(
     String mutation, {
     Map<String, dynamic>? variables,
+    required String operationName,
   });
 }
 
 class GraphQLServiceImpl implements GraphQLService {
   final GraphQLClient _client;
+  final Ref _ref;
+  static const String _sessionHeader = 'vendure-auth-token';
 
-  GraphQLServiceImpl(this._client);
+  GraphQLServiceImpl(this._client, this._ref);
 
   @override
   Future<dynamic> performQuery(
     String query, {
     Map<String, dynamic>? variables,
+    required String operationName,
   }) async {
     final QueryOptions options = QueryOptions(
       document: gql(query),
       variables: variables ?? const {},
+      operationName: operationName,
     );
 
     try {
@@ -36,6 +48,8 @@ class GraphQLServiceImpl implements GraphQLService {
       if (result.hasException) {
         _handleException(result.exception!);
       }
+
+      await _updateSessionToken(result);
 
       return result.data;
     } on TimeoutException {
@@ -55,10 +69,12 @@ class GraphQLServiceImpl implements GraphQLService {
   Future<dynamic> performMutation(
     String mutation, {
     Map<String, dynamic>? variables,
+    required String operationName,
   }) async {
     final MutationOptions options = MutationOptions(
       document: gql(mutation),
       variables: variables ?? const {},
+      operationName: operationName,
     );
 
     try {
@@ -71,6 +87,8 @@ class GraphQLServiceImpl implements GraphQLService {
         _handleException(result.exception!);
       }
 
+      await _updateSessionToken(result);
+
       return result.data;
     } on TimeoutException {
       throw app_exceptions.AppTimeoutException(
@@ -82,6 +100,32 @@ class GraphQLServiceImpl implements GraphQLService {
         rethrow;
       }
       throw app_exceptions.ServerException(e.toString());
+    }
+  }
+
+  Future<void> _updateSessionToken(QueryResult result) async {
+    final httpResponseContext = result.context.entry<HttpLinkResponseContext>();
+    final headers = httpResponseContext?.headers;
+
+    if (headers != null) {
+      // Case-insensitive lookup for the vendure-auth-token
+      final tokenEntry = headers.entries.firstWhere(
+        (e) => e.key.toLowerCase() == _sessionHeader.toLowerCase(),
+        orElse: () => const MapEntry('', ''),
+      );
+
+      final newToken = tokenEntry.value;
+
+      if (newToken.isNotEmpty) {
+        // Log if the token actually changed (debug level)
+        final sessionState = _ref.read(sessionTokenProvider);
+        final currentToken = sessionState.value;
+
+        if (currentToken != newToken.trim()) {
+          debugPrint('🔑 Session token changed/received: ${newToken.trim()}');
+          await _ref.read(sessionTokenProvider.notifier).updateToken(newToken);
+        }
+      }
     }
   }
 
