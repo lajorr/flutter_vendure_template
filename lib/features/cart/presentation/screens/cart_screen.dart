@@ -10,6 +10,7 @@ import 'package:vendure_flutter_app/features/cart/presentation/widgets/cart_empt
 import 'package:vendure_flutter_app/features/cart/presentation/widgets/cart_error_view.dart';
 import 'package:vendure_flutter_app/features/cart/presentation/widgets/cart_items_section.dart';
 import 'package:vendure_flutter_app/features/cart/presentation/widgets/summary_section.dart';
+import 'package:vendure_flutter_app/shared/widgets/custom_app_bar.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
@@ -23,9 +24,6 @@ class CartScreen extends ConsumerStatefulWidget {
 }
 
 class _CartScreenState extends ConsumerState<CartScreen> {
-  static const _shippingFee = 12.50;
-  static const _taxFee = 23.20;
-
   @override
   void initState() {
     super.initState();
@@ -99,13 +97,21 @@ class _CartScreenState extends ConsumerState<CartScreen> {
               ),
             );
           }
+          final shipping = activeOrder.shippingWithTax > 0
+              ? activeOrder.shippingWithTax / 100
+              : null;
+          final tax = (activeOrder.subTotalWithTax - activeOrder.subTotal) > 0
+              ? (activeOrder.subTotalWithTax - activeOrder.subTotal) / 100
+              : null;
+
           return RefreshIndicator(
             onRefresh: () =>
                 ref.read(cartControllerProvider.notifier).fetchActiveOrder(),
             child: _CartLoadedView(
               items: _toCartItems(activeOrder.lines),
-              shippingFee: _shippingFee,
-              taxFee: _taxFee,
+              shippingFee: shipping,
+              taxFee: tax,
+              totalWithTax: activeOrder.totalWithTax / 100,
             ),
           );
         },
@@ -113,14 +119,14 @@ class _CartScreenState extends ConsumerState<CartScreen> {
     );
   }
 
-  AppBar _buildAppBar(CartState cartState) {
+  PreferredSizeWidget _buildAppBar(CartState cartState) {
     final itemCount = cartState.maybeWhen(
       success: (order) => order?.lines.length ?? 0,
       orElse: () => 0,
     );
 
-    return AppBar(
-      title: const Text('Shopping Cart'),
+    return CustomAppBar(
+      title: 'Shopping Cart',
       actions: [
         Container(
           margin: const EdgeInsets.only(right: AppSpacing.xs),
@@ -169,6 +175,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
         ),
         AppSpacing.hXS,
       ],
+      showLeadingWidget: false,
     );
   }
 }
@@ -191,11 +198,13 @@ class _CartLoadedView extends StatelessWidget {
     required this.items,
     required this.shippingFee,
     required this.taxFee,
+    required this.totalWithTax,
   });
 
   final List<CartItemData> items;
-  final double shippingFee;
-  final double taxFee;
+  final double? shippingFee;
+  final double? taxFee;
+  final double totalWithTax;
 
   @override
   Widget build(BuildContext context) {
@@ -203,7 +212,7 @@ class _CartLoadedView extends StatelessWidget {
       0,
       (sum, item) => sum + (item.price * item.quantity),
     );
-    final orderTotal = subtotal + shippingFee + taxFee;
+    final orderTotal = totalWithTax;
 
     return LayoutBuilder(
       builder: (context, constraints) {

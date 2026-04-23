@@ -4,7 +4,7 @@ import 'package:vendure_flutter_app/core/usecases/usecase.dart';
 import 'package:vendure_flutter_app/features/cart/domain/repositories/cart_repository.dart';
 
 class AddItemToOrderUseCase extends Usecase<void, AddItemToOrderUseCaseParams> {
-  final CartRepository repository;
+  final OrderLineRepository repository;
 
   AddItemToOrderUseCase(this.repository);
 

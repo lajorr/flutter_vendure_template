@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../features/cart/presentation/screens/cart_shipping_screen.dart';
 import '../../features/dashboard/presentation/screens/dashboard_screen.dart';
 import '../../features/products/presentation/screens/product_detail_screen.dart';
 import '../../features/products/presentation/screens/product_list_screen.dart';
@@ -38,6 +39,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const Scaffold(
           body: Center(child: Text('Checkout Screen (Pending Layout)')),
         ),
+      ),
+      GoRoute(
+        path: AppRoute.shippingMethod.path,
+        name: AppRoute.shippingMethod.name,
+        builder: (context, state) => const CartShippingScreen(),
       ),
       GoRoute(
         path: AppRoute.orders.path,

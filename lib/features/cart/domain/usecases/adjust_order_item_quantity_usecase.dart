@@ -6,7 +6,7 @@ import 'package:vendure_flutter_app/features/cart/domain/repositories/cart_repos
 
 class AdjustOrderItemQuantityUsecase
     extends Usecase<ActiveOrder, AdjustOrderItemQuantityUsecaseParams> {
-  final CartRepository repository;
+  final OrderLineRepository repository;
 
   AdjustOrderItemQuantityUsecase(this.repository);
 

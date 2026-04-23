@@ -79,6 +79,7 @@ abstract class ActiveOrderShippingLine with _$ActiveOrderShippingLine {
     @Default(0) int priceWithTax,
     @Default(0) int discountedPrice,
     @Default(0) int discountedPriceWithTax,
+    String? shippingMethodId,
     dynamic customFields,
   }) = _ActiveOrderShippingLine;
 }

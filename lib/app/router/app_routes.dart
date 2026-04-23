@@ -3,6 +3,7 @@ enum AppRoute {
   products('products'),
   productDetail('product-detail/:id'),
   checkout('/checkout'),
+  shippingMethod('/shipping-method'),
   orders('/orders');
 
   final String path;

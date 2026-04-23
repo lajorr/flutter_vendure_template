@@ -148,6 +148,16 @@ abstract class ActiveOrderLineModel with _$ActiveOrderLineModel {
 }
 
 @freezed
+abstract class ActiveOrderShippingMethodModel with _$ActiveOrderShippingMethodModel {
+  const factory ActiveOrderShippingMethodModel({
+    @Default('') String id,
+  }) = _ActiveOrderShippingMethodModel;
+
+  factory ActiveOrderShippingMethodModel.fromJson(Map<String, dynamic> json) =>
+      _$ActiveOrderShippingMethodModelFromJson(json);
+}
+
+@freezed
 abstract class ActiveOrderShippingLineModel
     with _$ActiveOrderShippingLineModel {
   const factory ActiveOrderShippingLineModel({
@@ -156,6 +166,7 @@ abstract class ActiveOrderShippingLineModel
     @Default(0) int priceWithTax,
     @Default(0) int discountedPrice,
     @Default(0) int discountedPriceWithTax,
+    ActiveOrderShippingMethodModel? shippingMethod,
     dynamic customFields,
   }) = _ActiveOrderShippingLineModel;
 
@@ -170,6 +181,7 @@ abstract class ActiveOrderShippingLineModel
     priceWithTax: priceWithTax,
     discountedPrice: discountedPrice,
     discountedPriceWithTax: discountedPriceWithTax,
+    shippingMethodId: shippingMethod?.id,
     customFields: customFields,
   );
 }

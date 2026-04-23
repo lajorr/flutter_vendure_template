@@ -5,7 +5,7 @@ import 'package:vendure_flutter_app/features/cart/domain/entities/active_order.d
 import 'package:vendure_flutter_app/features/cart/domain/repositories/cart_repository.dart';
 
 class RemoveAllOrderLineUsecase extends Usecase<ActiveOrder, NoParams> {
-  final CartRepository repository;
+  final OrderLineRepository repository;
 
   RemoveAllOrderLineUsecase(this.repository);
 

@@ -66,6 +66,9 @@ class OrderFragments {
     }
     shippingLines {
         id
+        shippingMethod {
+            id
+        }
         price
         priceWithTax
         discountedPrice

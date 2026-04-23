@@ -77,4 +77,28 @@ class CartMutations {
       }
     }
   ''';
+
+  static const setOrderShippingMethodMutation =
+      '''
+    mutation SetOrderShippingMethod(\$shippingMethodId: [ID!]!){
+      setOrderShippingMethod(shippingMethodId: \$shippingMethodId) {
+        __typename
+        ... on Order {
+        ${OrderFragments.orderFields}
+        }
+        ... on OrderModificationError{
+          errorCode
+          message
+        }
+        ... on IneligibleShippingMethodError{
+          errorCode
+          message
+        }
+        ... on NoActiveOrderError{
+          errorCode
+          message
+        }
+      }
+    }
+  ''';
 }

@@ -15,8 +15,8 @@ class SummarySection extends StatelessWidget {
   });
 
   final double subtotal;
-  final double shipping;
-  final double tax;
+  final double? shipping;
+  final double? tax;
   final double total;
 
   @override
@@ -111,10 +111,14 @@ class SummarySection extends StatelessWidget {
               const Text('Order Summary', style: AppTextStyles.h2),
               AppSpacing.vM,
               _SummaryRow(label: 'Subtotal', value: _formatPrice(subtotal)),
-              AppSpacing.vXS,
-              _SummaryRow(label: 'Shipping', value: _formatPrice(shipping)),
-              AppSpacing.vXS,
-              _SummaryRow(label: 'Tax (Estimated)', value: _formatPrice(tax)),
+              if (shipping != null && shipping! > 0) ...[
+                AppSpacing.vXS,
+                _SummaryRow(label: 'Shipping', value: _formatPrice(shipping!)),
+              ],
+              if (tax != null && tax! > 0) ...[
+                AppSpacing.vXS,
+                _SummaryRow(label: 'Tax', value: _formatPrice(tax!)),
+              ],
               const Divider(height: AppSpacing.l + AppSpacing.s),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -137,9 +141,10 @@ class SummarySection extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton.icon(
-                  onPressed: () => context.pushNamed(AppRoute.checkout.name),
+                  onPressed: () =>
+                      context.pushNamed(AppRoute.shippingMethod.name),
                   icon: const Icon(Icons.arrow_forward),
-                  label: const Text('Proceed to Checkout'),
+                  label: const Text('Continue '),
                 ),
               ),
               AppSpacing.vM,

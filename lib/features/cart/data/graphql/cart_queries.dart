@@ -9,4 +9,19 @@ class CartQueries {
         }
     }
   ''';
+
+  static const String eligibleShippingMethodsQuery = r'''
+    query EligibleShippingMethods {
+      eligibleShippingMethods {
+          id
+          price
+          priceWithTax
+          code
+          name
+          description
+          metadata
+          customFields
+      }
+    }
+  ''';
 }
