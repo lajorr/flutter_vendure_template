@@ -5,7 +5,9 @@ enum AppRoute {
   checkout('/checkout'),
   shippingMethod('/shipping-method'),
   addAddress('/add-address'),
-  orders('/orders');
+  orders('/orders'),
+  login('/login'),
+  signup('/signup');
 
   final String path;
   const AppRoute(this.path);

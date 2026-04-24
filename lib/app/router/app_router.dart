@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:vendure_flutter_app/features/auth/presentation/screens/login_screen.dart';
+import 'package:vendure_flutter_app/features/auth/presentation/screens/signup_screen.dart';
 import 'package:vendure_flutter_app/features/customer/presentation/screens/add_address_screen.dart';
 
 import '../../features/cart/presentation/screens/cart_shipping_screen.dart';
@@ -11,9 +13,19 @@ import 'app_routes.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
-    initialLocation: AppRoute.dashboard.path,
+    initialLocation: AppRoute.login.path,
     debugLogDiagnostics: true,
     routes: [
+      GoRoute(
+        path: AppRoute.login.path,
+        name: AppRoute.login.name,
+        builder: (context, state) => const LoginScreen(),
+      ),
+      GoRoute(
+        path: AppRoute.signup.path,
+        name: AppRoute.signup.name,
+        builder: (context, state) => const SignupScreen(),
+      ),
       GoRoute(
         path: AppRoute.dashboard.path,
         name: AppRoute.dashboard.name,
