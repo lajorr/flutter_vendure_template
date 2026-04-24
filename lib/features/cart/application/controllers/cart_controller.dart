@@ -30,6 +30,7 @@ class CartController extends _$CartController {
     );
   }
 
+
   void updateActiveOrder(ActiveOrder updatedActiveOrder) {
     state = CartState.success(activeOrder: updatedActiveOrder);
   }

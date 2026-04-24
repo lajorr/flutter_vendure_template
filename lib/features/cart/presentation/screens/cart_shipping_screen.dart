@@ -7,6 +7,7 @@ import 'package:vendure_flutter_app/features/cart/application/controllers/cart_c
 import 'package:vendure_flutter_app/features/cart/application/controllers/cart_state.dart';
 import 'package:vendure_flutter_app/features/cart/application/controllers/shipping_methods_controller.dart';
 import 'package:vendure_flutter_app/features/cart/application/controllers/shipping_methods_state.dart';
+import 'package:vendure_flutter_app/features/cart/presentation/widgets/address_selection_section.dart';
 import 'package:vendure_flutter_app/features/cart/presentation/widgets/shipping_method_card.dart';
 import 'package:vendure_flutter_app/shared/widgets/custom_app_bar.dart';
 
@@ -42,9 +43,17 @@ class _ShippingMethodScreenState extends ConsumerState<CartShippingScreen> {
 
     return Scaffold(
       appBar: const CustomAppBar(title: 'Shipping', actions: []),
-      body: Padding(
-        padding: EdgeInsets.all(AppSpacing.m),
-        child: Column(children: [ShippingMethodCard()]),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(AppSpacing.m),
+          child: Column(
+            children: [
+              const ShippingMethodCard(),
+              const SizedBox(height: AppSpacing.l),
+              const AddressSelectionSection(),
+            ],
+          ),
+        ),
       ),
       bottomNavigationBar: Container(
         color: Colors.white,

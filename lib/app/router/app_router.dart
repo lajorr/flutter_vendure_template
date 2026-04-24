@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:vendure_flutter_app/features/customer/presentation/screens/add_address_screen.dart';
 
 import '../../features/cart/presentation/screens/cart_shipping_screen.dart';
 import '../../features/dashboard/presentation/screens/dashboard_screen.dart';
@@ -44,6 +45,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: AppRoute.shippingMethod.path,
         name: AppRoute.shippingMethod.name,
         builder: (context, state) => const CartShippingScreen(),
+      ),
+      GoRoute(
+        path: AppRoute.addAddress.path,
+        name: AppRoute.addAddress.name,
+        builder: (context, state) => const AddAddressScreen(),
       ),
       GoRoute(
         path: AppRoute.orders.path,

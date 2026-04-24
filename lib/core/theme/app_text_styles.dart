@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'app_colors.dart';
 
 class AppTextStyles {
@@ -13,6 +14,12 @@ class AppTextStyles {
 
   static const TextStyle h2 = TextStyle(
     fontSize: 20,
+    fontWeight: FontWeight.w600, // Semibold
+    color: AppColors.textPrimary,
+    fontFamily: fontFamily,
+  );
+  static const TextStyle h3 = TextStyle(
+    fontSize: 16,
     fontWeight: FontWeight.w600, // Semibold
     color: AppColors.textPrimary,
     fontFamily: fontFamily,

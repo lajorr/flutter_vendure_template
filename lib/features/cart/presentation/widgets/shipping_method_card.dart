@@ -61,14 +61,7 @@ class _ShippingMethodCardState extends ConsumerState<ShippingMethodCard> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            'Select Shipping Method',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: AppColors.textPrimary,
-            ),
-          ),
+          Text('Select Shipping Method', style: AppTextStyles.h3),
           AppSpacing.vS,
           Flexible(
             child: state.when(
