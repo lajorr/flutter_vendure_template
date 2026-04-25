@@ -100,6 +100,7 @@ class _ShippingMethodCardState extends ConsumerState<ShippingMethodCard> {
         child: ListView.separated(
           itemCount: methods.length,
           shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
           separatorBuilder: (context, index) =>
               const SizedBox(height: AppSpacing.m),
           itemBuilder: (context, index) {

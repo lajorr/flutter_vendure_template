@@ -7,7 +7,8 @@ enum AppRoute {
   addAddress('/add-address'),
   orders('/orders'),
   login('/login'),
-  signup('/signup');
+  signup('/signup'),
+  payment('/payment');
 
   final String path;
   const AppRoute(this.path);

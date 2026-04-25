@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:vendure_flutter_app/core/errors/repository_exception_handler.dart';
 import 'package:vendure_flutter_app/features/cart/domain/entities/shipping_method.dart';
+import 'package:vendure_flutter_app/shared/models/create_address_input.dart';
 
 import '../../../../core/errors/failures.dart';
 import '../../domain/entities/active_order.dart';
@@ -51,6 +52,24 @@ class CartRepositoryImpl
   Future<Either<Failure, void>> setShippingMethod({required String methodId}) {
     return exceptionHandler(() async {
       await _cartRemoteDatasource.setOrderShippingMethod(methodId);
+    });
+  }
+
+  @override
+  Future<Either<Failure, void>> setBillingAddress({
+    required CreateAddressInput address,
+  }) {
+    return exceptionHandler(() async {
+      await _cartRemoteDatasource.setOrderBillingAddress(address);
+    });
+  }
+
+  @override
+  Future<Either<Failure, void>> setShippingAddress({
+    required CreateAddressInput address,
+  }) {
+    return exceptionHandler(() async {
+      await _cartRemoteDatasource.setOrderShippingAddress(address);
     });
   }
 }

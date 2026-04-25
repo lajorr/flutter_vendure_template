@@ -101,4 +101,34 @@ class CartMutations {
       }
     }
   ''';
+
+  static const setOrderShippingAddressMutation = '''
+    mutation SetOrderShippingAddress(\$input: CreateAddressInput!){
+      setOrderShippingAddress(input: \$input) {
+        __typename
+        ... on Order {
+          id
+        }
+        ... on NoActiveOrderError{
+          errorCode
+          message
+        }
+      }
+    }
+  ''';
+
+  static const setOrderBillingAddressMutation = '''
+    mutation SetOrderBillingAddress(\$input: CreateAddressInput!){
+      setOrderBillingAddress(input: \$input) {
+        __typename
+        ... on Order {
+          id
+        }
+        ... on NoActiveOrderError{
+          errorCode
+          message
+        }
+      }
+    }
+  ''';
 }

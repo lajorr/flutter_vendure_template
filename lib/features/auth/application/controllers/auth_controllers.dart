@@ -19,14 +19,21 @@ class AuthController extends _$AuthController {
     final usecase = ref.read(getActiveCustomerUsecaseProvider);
     final result = await usecase.execute(NoParams());
 
-    return result.fold((failure) => null, (customer) => customer);
+    return result.fold((failure) => throw failure, (customer) => customer);
   }
 
   /// Call this method after a successful login or logout to refresh the global state.
   Future<void> refreshActiveCustomer() async {
-    state = const AsyncValue.loading();
-    state = await AsyncValue.guard(() => _fetchActiveCustomer());
+    ref.invalidateSelf();
+    await future; // optionally await the rebuild
   }
+}
+
+@riverpod
+bool isAuthenticated(Ref ref) {
+  return ref
+      .watch(authControllerProvider)
+      .maybeWhen(data: (customer) => customer != null, orElse: () => false);
 }
 
 /// Controller specifically for handling the Login process state (loading, error, success)

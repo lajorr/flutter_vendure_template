@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:vendure_flutter_app/features/auth/presentation/screens/login_screen.dart';
 import 'package:vendure_flutter_app/features/auth/presentation/screens/signup_screen.dart';
 import 'package:vendure_flutter_app/features/customer/presentation/screens/add_address_screen.dart';
+import 'package:vendure_flutter_app/features/cart/presentation/screens/cart_payment_screen.dart';
 
 import '../../features/cart/presentation/screens/cart_shipping_screen.dart';
 import '../../features/dashboard/presentation/screens/dashboard_screen.dart';
@@ -61,7 +62,15 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoute.addAddress.path,
         name: AppRoute.addAddress.name,
-        builder: (context, state) => const AddAddressScreen(),
+        builder: (context, state) {
+          final args = state.extra as AddAddressScreenArgs;
+          return AddAddressScreen(args: args);
+        },
+      ),
+      GoRoute(
+        path: AppRoute.payment.path,
+        name: AppRoute.payment.name,
+        builder: (context, state) => const CartPaymentScreen(),
       ),
       GoRoute(
         path: AppRoute.orders.path,

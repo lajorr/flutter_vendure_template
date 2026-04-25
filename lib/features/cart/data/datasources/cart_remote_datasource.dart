@@ -1,6 +1,8 @@
 import 'package:vendure_flutter_app/core/errors/exceptions.dart';
+import 'package:vendure_flutter_app/core/extensions/map_ext.dart';
 import 'package:vendure_flutter_app/features/cart/data/graphql/cart_mutations.dart';
 import 'package:vendure_flutter_app/features/cart/data/models/eligible_shipping_methods.dart';
+import 'package:vendure_flutter_app/shared/models/create_address_input.dart';
 
 import '../../../../core/network/graphql_service.dart';
 import '../graphql/cart_queries.dart';
@@ -12,6 +14,8 @@ abstract class CartRemoteDataSource {
     String? vendureToken,
   });
   Future<void> setOrderShippingMethod(String shippingMethodId);
+  Future<void> setOrderShippingAddress(CreateAddressInput addressInput);
+  Future<void> setOrderBillingAddress(CreateAddressInput addressInput);
 }
 
 class CartRemoteDataSourceImpl implements CartRemoteDataSource {
@@ -75,6 +79,56 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
         throw ServerException(result["message"]);
       case "IneligibleShippingMethodError":
         throw ServerException(result["message"]);
+      case "NoActiveOrderError":
+        throw ServerException(result["message"]);
+      default:
+        throw ServerException("Unexpected Error");
+    }
+  }
+
+  @override
+  Future<void> setOrderBillingAddress(CreateAddressInput addressInput) async {
+    final input = addressInput.toJson().withoutNulls;
+
+    final data = await _graphqlService.performMutation(
+      CartMutations.setOrderBillingAddressMutation,
+      operationName: 'SetOrderBillingAddress',
+      variables: {"input": input},
+    );
+
+    final result = data["setOrderBillingAddress"];
+    if (result == null) {
+      throw ServerException("No Data Found");
+    }
+    final typename = result["__typename"];
+    switch (typename) {
+      case "Order":
+        return;
+      case "NoActiveOrderError":
+        throw ServerException(result["message"]);
+      default:
+        throw ServerException("Unexpected Error");
+    }
+  }
+
+  @override
+  Future<void> setOrderShippingAddress(CreateAddressInput addressInput) async {
+    final input = addressInput.toJson().withoutNulls;
+
+    final data = await _graphqlService.performMutation(
+      CartMutations.setOrderShippingAddressMutation,
+      operationName: 'SetOrderShippingAddress',
+      variables: {"input": input},
+    );
+
+    final result = data["setOrderShippingAddress"];
+    if (result == null) {
+      throw ServerException("No Data Found");
+    }
+    final typename = result["__typename"];
+    switch (typename) {
+      case "Order":
+        return;
       case "NoActiveOrderError":
         throw ServerException(result["message"]);
       default:
