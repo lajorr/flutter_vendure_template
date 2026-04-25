@@ -51,4 +51,18 @@ class CartQueries {
         }
     }
   ''';
+
+  static const String eligiblePaymentMethodsQuery = r'''
+    query EligiblePaymentMethods {
+      eligiblePaymentMethods {
+        id
+        code
+        name
+        description
+        isEligible
+        eligibilityMessage
+        customFields
+      }
+    }
+  ''';
 }

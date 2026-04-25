@@ -131,4 +131,61 @@ class CartMutations {
       }
     }
   ''';
+
+  static const transitionOrderToStateMutation = '''
+    mutation TransitionOrderToState(\$state: String!) {
+      transitionOrderToState(state: \$state) {
+        __typename
+        ... on Order {
+          id
+          state
+        }
+        ... on OrderStateTransitionError {
+          errorCode
+          message
+          transitionError
+          fromState
+          toState
+        }
+      }
+    }
+  ''';
+
+  static const addPaymentToOrder =
+      '''
+  mutation AddPaymentToOrder(\$input: PaymentInput!) {
+    addPaymentToOrder(input: \$input){
+      __typename
+      ... on Order {
+      ${OrderFragments.orderFields}
+      }
+      ... on OrderPaymentStateError{
+        errorCode
+        message
+      }
+      ... on IneligiblePaymentMethodError{
+        errorCode
+        message
+      }
+      ... on PaymentFailedError{
+        errorCode
+        message
+      } 
+      ... on PaymentDeclinedError{
+        errorCode
+        message
+      } 
+      ... on OrderStateTransitionError{
+        errorCode
+        message
+      } 
+      ... on NoActiveOrderError{
+        errorCode
+        message
+      } 
+    }
+  }
+
+
+''';
 }

@@ -93,8 +93,7 @@ class _ShippingMethodScreenState extends ConsumerState<CartShippingScreen> {
                 ),
               ],
             ),
-            const SizedBox(height: AppSpacing.m),
-
+            AppSpacing.vM,
             AppButton(
               text: 'Continue',
               onPressed: state.maybeWhen(

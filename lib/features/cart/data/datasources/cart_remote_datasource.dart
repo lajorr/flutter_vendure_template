@@ -2,20 +2,26 @@ import 'package:vendure_flutter_app/core/errors/exceptions.dart';
 import 'package:vendure_flutter_app/core/extensions/map_ext.dart';
 import 'package:vendure_flutter_app/features/cart/data/graphql/cart_mutations.dart';
 import 'package:vendure_flutter_app/features/cart/data/models/eligible_shipping_methods.dart';
+import 'package:vendure_flutter_app/features/cart/data/models/payment_method_model.dart';
 import 'package:vendure_flutter_app/shared/models/create_address_input.dart';
 
 import '../../../../core/network/graphql_service.dart';
 import '../graphql/cart_queries.dart';
 import '../models/active_order_model.dart';
+import '../models/payment_input.dart';
 
 abstract class CartRemoteDataSource {
   Future<ActiveOrderResponseModel> fetchActiveOrder();
   Future<EligibleShippingMethodsResponse> fetchEligibleShippingMethods({
     String? vendureToken,
   });
+  Future<List<PaymentMethodModel>> fetchEligiblePaymentMethods();
   Future<void> setOrderShippingMethod(String shippingMethodId);
   Future<void> setOrderShippingAddress(CreateAddressInput addressInput);
   Future<void> setOrderBillingAddress(CreateAddressInput addressInput);
+  Future<void> transitionOrderToState(String state);
+
+  Future<void> addPaymentToOrder(PaymentInput input);
 }
 
 class CartRemoteDataSourceImpl implements CartRemoteDataSource {
@@ -47,7 +53,6 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
       CartQueries.eligibleShippingMethodsQuery,
       operationName: 'EligibleShippingMethods',
     );
-
     if (data == null) {
       throw ServerException("No Data Found");
     }
@@ -129,6 +134,75 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
     switch (typename) {
       case "Order":
         return;
+      case "NoActiveOrderError":
+        throw ServerException(result["message"]);
+      default:
+        throw ServerException("Unexpected Error");
+    }
+  }
+
+  @override
+  Future<List<PaymentMethodModel>> fetchEligiblePaymentMethods() async {
+    final data = await _graphqlService.performQuery(
+      CartQueries.eligiblePaymentMethodsQuery,
+      operationName: 'EligiblePaymentMethods',
+    );
+    final paymentMethods = data["eligiblePaymentMethods"];
+    if (paymentMethods == null) {
+      throw ServerException("No Data Found");
+    }
+    if (paymentMethods is List<dynamic>) {
+      return paymentMethods
+          .map((method) => PaymentMethodModel.fromJson(method))
+          .toList();
+    }
+    throw ServerException("Invalid Data Format");
+  }
+
+  @override
+  Future<void> transitionOrderToState(String state) async {
+    final data = await _graphqlService.performMutation(
+      CartMutations.transitionOrderToStateMutation,
+      operationName: 'TransitionOrderToState',
+      variables: {"state": state},
+    );
+
+    final result = data["transitionOrderToState"];
+    if (result == null) {
+      throw ServerException("No Data Found");
+    }
+    final typename = result["__typename"];
+    switch (typename) {
+      case "Order":
+        return;
+      case "OrderStateTransitionError":
+        throw ServerException(result["message"]);
+      default:
+        throw ServerException("Unexpected Error");
+    }
+  }
+
+  @override
+  Future<void> addPaymentToOrder(PaymentInput paymentInput) async {
+    final data = await _graphqlService.performMutation(
+      CartMutations.addPaymentToOrder,
+      operationName: 'AddPaymentToOrder',
+      variables: {"input": paymentInput.toJson()},
+    );
+
+    final result = data["addPaymentToOrder"];
+    if (result == null) {
+      throw ServerException("No Data Found");
+    }
+    final typename = result["__typename"];
+    switch (typename) {
+      case "Order":
+        return;
+      case "OrderPaymentStateError":
+      case "IneligiblePaymentMethodError":
+      case "PaymentFailedError":
+      case "PaymentDeclinedError":
+      case "OrderStateTransitionError":
       case "NoActiveOrderError":
         throw ServerException(result["message"]);
       default:

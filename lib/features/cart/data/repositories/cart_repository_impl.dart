@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:vendure_flutter_app/core/errors/repository_exception_handler.dart';
+import 'package:vendure_flutter_app/features/cart/domain/entities/payment_method.dart';
 import 'package:vendure_flutter_app/features/cart/domain/entities/shipping_method.dart';
 import 'package:vendure_flutter_app/shared/models/create_address_input.dart';
 
@@ -7,6 +8,7 @@ import '../../../../core/errors/failures.dart';
 import '../../domain/entities/active_order.dart';
 import '../../domain/repositories/cart_repository.dart';
 import '../datasources/cart_remote_datasource.dart';
+import '../models/payment_input.dart';
 
 class CartRepositoryImpl
     with RepositoryExceptionMixin
@@ -70,6 +72,34 @@ class CartRepositoryImpl
   }) {
     return exceptionHandler(() async {
       await _cartRemoteDatasource.setOrderShippingAddress(address);
+    });
+  }
+
+  @override
+  Future<Either<Failure, List<PaymentMethod>>> fetchEligiblePaymentMethods() {
+    return exceptionHandler(() async {
+      final paymentModels = await _cartRemoteDatasource
+          .fetchEligiblePaymentMethods();
+      return paymentModels.map((model) => model.toEntity()).toList();
+    });
+  }
+
+  @override
+  Future<Either<Failure, void>> transitionOrderToState(String state) {
+    return exceptionHandler(() async {
+      await _cartRemoteDatasource.transitionOrderToState(state);
+    });
+  }
+
+  @override
+  Future<Either<Failure, void>> addPaymentToOrder({
+    required String method,
+    Map<String, dynamic>? metadata,
+  }) {
+    return exceptionHandler(() async {
+      await _cartRemoteDatasource.addPaymentToOrder(
+        PaymentInput(method: method, metadata: metadata ?? {}),
+      );
     });
   }
 }

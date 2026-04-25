@@ -16,18 +16,39 @@ class CartItemController extends _$CartItemController {
     return CartItemState.initial();
   }
 
+  // ---------------------------------------------------------------------------
+  // Private helper: ensure the order is in AddingItems before mutating.
+  // Returns true if ready, false on transition failure.
+  // ---------------------------------------------------------------------------
+  Future<bool> _ensureAddingItemsState() async {
+    final cartState = ref.read(cartControllerProvider);
+    final activeOrderState = cartState.activeOrderState;
+
+    if (activeOrderState == ActiveOrderStateEnum.addingItems) {
+      return true;
+    }
+
+    // Currently in ArrangingPayment — transition back to AddingItems first.
+    final transitioned = await ref
+        .read(cartControllerProvider.notifier)
+        .transitionToAddingItems();
+
+    return transitioned;
+  }
+
+  // ---------------------------------------------------------------------------
+
   Future<void> addItemToOrder({
     required String variantId,
     required int quantity,
   }) async {
-    final cartState = ref.read(cartControllerProvider);
-    final activeOrderState = cartState.activeOrderState;
-
     state = CartItemState.loading(variantId: variantId);
 
-    if (activeOrderState != ActiveOrderStateEnum.addingItems) {
-      // TODO: transition to adding items
-      state = CartItemState.error("Arranging payment statte");
+    final ready = await _ensureAddingItemsState();
+    if (!ready) {
+      state = CartItemState.error(
+        'Could not transition order to AddingItems state.',
+      );
       return;
     }
 
@@ -52,14 +73,13 @@ class CartItemController extends _$CartItemController {
     required String orderLineId,
     required int quantity,
   }) async {
-    final cartState = ref.read(cartControllerProvider);
-    final activeOrderState = cartState.activeOrderState;
-
     state = CartItemState.loading(orderLineId: orderLineId);
 
-    if (activeOrderState != ActiveOrderStateEnum.addingItems) {
-      // TODO: transition to adding items
-      state = CartItemState.error("Arranging payment statte");
+    final ready = await _ensureAddingItemsState();
+    if (!ready) {
+      state = CartItemState.error(
+        'Could not transition order to AddingItems state.',
+      );
       return;
     }
 
@@ -84,14 +104,13 @@ class CartItemController extends _$CartItemController {
   }
 
   Future<void> removeOrderLine({required String orderLineId}) async {
-    final cartState = ref.read(cartControllerProvider);
-    final activeOrderState = cartState.activeOrderState;
-
     state = CartItemState.loading(orderLineId: orderLineId);
 
-    if (activeOrderState != ActiveOrderStateEnum.addingItems) {
-      // TODO: transition to adding items
-      state = CartItemState.error("Arranging payment statte");
+    final ready = await _ensureAddingItemsState();
+    if (!ready) {
+      state = CartItemState.error(
+        'Could not transition order to AddingItems state.',
+      );
       return;
     }
 
@@ -111,12 +130,11 @@ class CartItemController extends _$CartItemController {
   }
 
   Future<void> removeAllOrderLine() async {
-    final cartState = ref.read(cartControllerProvider);
-    final activeOrderState = cartState.activeOrderState;
-
-    if (activeOrderState != ActiveOrderStateEnum.addingItems) {
-      // TODO: transition to adding items
-      state = CartItemState.error("Arranging payment statte");
+    final ready = await _ensureAddingItemsState();
+    if (!ready) {
+      state = CartItemState.error(
+        'Could not transition order to AddingItems state.',
+      );
       return;
     }
 

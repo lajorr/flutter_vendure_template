@@ -34,5 +34,47 @@ class CartController extends _$CartController {
     state = CartState.success(activeOrder: updatedActiveOrder);
   }
 
-  
+  /// Transitions the order from AddingItems → ArrangingPayment.
+  /// Call this right before placing an order / proceeding to payment.
+  Future<bool> transitionToArrangingPayment() async {
+    final result = await ref
+        .read(transitionOrderToStateUsecaseProvider)
+        .execute('ArrangingPayment');
+
+    return result.fold((failure) => false, (_) {
+      // Reflect the new state locally without a full refetch.
+      final currentOrder = state.maybeWhen(
+        success: (order) => order,
+        orElse: () => null,
+      );
+      if (currentOrder != null) {
+        state = CartState.success(
+          activeOrder: currentOrder.copyWith(state: 'ArrangingPayment'),
+        );
+      }
+      return true;
+    });
+  }
+
+  /// Transitions the order back from ArrangingPayment → AddingItems.
+  /// Call this before any cart mutation (add / adjust / remove) when the
+  /// current order state is ArrangingPayment.
+  Future<bool> transitionToAddingItems() async {
+    final result = await ref
+        .read(transitionOrderToStateUsecaseProvider)
+        .execute('AddingItems');
+
+    return result.fold((failure) => false, (_) {
+      final currentOrder = state.maybeWhen(
+        success: (order) => order,
+        orElse: () => null,
+      );
+      if (currentOrder != null) {
+        state = CartState.success(
+          activeOrder: currentOrder.copyWith(state: 'AddingItems'),
+        );
+      }
+      return true;
+    });
+  }
 }
