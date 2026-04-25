@@ -14,6 +14,7 @@ import 'package:vendure_flutter_app/features/cart/application/providers/cart_pro
 import 'package:vendure_flutter_app/features/cart/presentation/widgets/address_selection_section.dart';
 import 'package:vendure_flutter_app/features/cart/presentation/widgets/set_address_section.dart';
 import 'package:vendure_flutter_app/features/cart/presentation/widgets/shipping_method_card.dart';
+import 'package:vendure_flutter_app/shared/widgets/app_button.dart';
 import 'package:vendure_flutter_app/shared/widgets/custom_app_bar.dart';
 
 class CartShippingScreen extends ConsumerStatefulWidget {
@@ -93,33 +94,17 @@ class _ShippingMethodScreenState extends ConsumerState<CartShippingScreen> {
               ],
             ),
             const SizedBox(height: AppSpacing.m),
-            SizedBox(
-              width: double.infinity,
-              height: 54,
-              child: ElevatedButton(
-                onPressed: state.maybeWhen(
-                  success: (methods, selected) =>
-                      (selected != null && shippingAddress != null)
-                      ? () {
-                          context.pushNamed(AppRoute.payment.name);
-                        }
-                      : null,
-                  orElse: () => null,
-                ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primaryNavy,
-                  foregroundColor: Colors.white,
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(
-                      AppSpacing.radiusButton,
-                    ),
-                  ),
-                ),
-                child: const Text(
-                  'Continue',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
+
+            AppButton(
+              text: 'Continue',
+              onPressed: state.maybeWhen(
+                success: (methods, selected) =>
+                    (selected != null && shippingAddress != null)
+                    ? () {
+                        context.pushNamed(AppRoute.payment.name);
+                      }
+                    : null,
+                orElse: () => null,
               ),
             ),
           ],

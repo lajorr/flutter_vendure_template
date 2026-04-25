@@ -4,9 +4,9 @@ import 'package:vendure_flutter_app/app/router/app_routes.dart';
 import 'package:vendure_flutter_app/core/theme/app_colors.dart';
 import 'package:vendure_flutter_app/core/theme/app_spacing.dart';
 import 'package:vendure_flutter_app/core/theme/app_text_styles.dart';
-import 'package:vendure_flutter_app/features/auth/presentation/widgets/primary_button.dart';
 import 'package:vendure_flutter_app/features/auth/presentation/widgets/social_button.dart';
 import 'package:vendure_flutter_app/gen/assets.gen.dart';
+import 'package:vendure_flutter_app/shared/widgets/app_button.dart';
 import 'package:vendure_flutter_app/shared/widgets/custom_text_field.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -89,11 +89,7 @@ class LoginScreen extends StatelessWidget {
                 ),
               ),
               AppSpacing.vM,
-              PrimaryButton(
-                text: 'Sign In',
-                icon: Icons.login,
-                onPressed: () {},
-              ),
+              AppButton(text: 'Sign In', icon: Icons.login, onPressed: () {}),
               AppSpacing.vXL,
               Row(
                 children: [

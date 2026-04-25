@@ -30,11 +30,7 @@ class SocialButton extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(
-              width: 24,
-              height: 24,
-              child: icon,
-            ),
+            SizedBox(width: 24, height: 24, child: icon),
             const SizedBox(width: 8),
             Text(
               text,

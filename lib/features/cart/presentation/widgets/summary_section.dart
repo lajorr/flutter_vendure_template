@@ -4,6 +4,7 @@ import 'package:vendure_flutter_app/app/router/app_routes.dart';
 import 'package:vendure_flutter_app/core/theme/app_colors.dart';
 import 'package:vendure_flutter_app/core/theme/app_spacing.dart';
 import 'package:vendure_flutter_app/core/theme/app_text_styles.dart';
+import 'package:vendure_flutter_app/shared/widgets/app_button.dart';
 
 class SummarySection extends StatelessWidget {
   const SummarySection({
@@ -138,14 +139,11 @@ class SummarySection extends StatelessWidget {
                 ],
               ),
               AppSpacing.vL,
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton.icon(
-                  onPressed: () =>
-                      context.pushNamed(AppRoute.shippingMethod.name),
-                  icon: const Icon(Icons.arrow_forward),
-                  label: const Text('Continue '),
-                ),
+              AppButton(
+                text: 'Continue',
+                onPressed: () =>
+                    context.pushNamed(AppRoute.shippingMethod.name),
+                icon: Icons.arrow_forward,
               ),
               AppSpacing.vM,
               Row(
