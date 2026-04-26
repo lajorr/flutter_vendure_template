@@ -3,6 +3,9 @@ import 'package:vendure_flutter_app/core/usecases/usecase.dart';
 import 'package:vendure_flutter_app/features/auth/application/providers/auth_providers.dart';
 import 'package:vendure_flutter_app/features/auth/domain/entities/customer.dart';
 
+import '../../domain/usecases/login_usecase.dart';
+import '../../domain/usecases/register_usecase.dart';
+
 part 'auth_controllers.g.dart';
 
 /// Global controller to manage the Authentication state.
@@ -47,15 +50,18 @@ class LoginController extends _$LoginController {
   }
 
   Future<void> login(String email, String password) async {
+    if (state.isLoading) return;
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
-      // TODO: Call your login usecase here
-      // final usecase = ref.read(loginUsecaseProvider);
-      // final result = await usecase.execute(LoginParams(email: email, password: password));
-      // if (result.isLeft()) throw result.fold((l) => l, (r) => null)!;
+      final usecase = ref.read(loginUseCaseProvider);
+      final result = await usecase.execute(
+        LoginParams(username: email, password: password),
+      );
 
-      // After successful login, refresh the active customer state!
-      await ref.read(authControllerProvider.notifier).refreshActiveCustomer();
+      return result.fold((failure) => throw failure, (_) async {
+        // After successful login, refresh the active customer state!
+        await ref.read(authControllerProvider.notifier).refreshActiveCustomer();
+      });
     });
   }
 }
@@ -68,10 +74,28 @@ class SignUpController extends _$SignUpController {
     // Initial state is empty
   }
 
-  Future<void> signUp(String email, String password) async {
+  Future<void> signUp({
+    required String firstName,
+    required String lastName,
+    required String email,
+    required String password,
+    String? phoneNumber,
+  }) async {
+    if (state.isLoading) return;
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
-      // TODO: Call your signup usecase here
+      final usecase = ref.read(registerUseCaseProvider);
+      final result = await usecase.execute(
+        RegisterParams(
+          firstName: firstName,
+          lastName: lastName,
+          emailAddress: email,
+          password: password,
+          phoneNumber: phoneNumber,
+        ),
+      );
+
+      return result.fold((failure) => throw failure, (_) => null);
     });
   }
 }
@@ -85,6 +109,7 @@ class ForgotPasswordController extends _$ForgotPasswordController {
   }
 
   Future<void> requestPasswordReset(String email) async {
+    if (state.isLoading) return;
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
       // TODO: Call request password reset usecase here

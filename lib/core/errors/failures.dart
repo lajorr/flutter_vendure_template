@@ -28,3 +28,7 @@ class CacheFailure extends Failure {
 class InsufficientStockFailure extends Failure {
   const InsufficientStockFailure(super.message);
 }
+
+class AccountNotVerifiedFailure extends Failure {
+  const AccountNotVerifiedFailure(super.message);
+}

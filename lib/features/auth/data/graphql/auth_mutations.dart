@@ -21,4 +21,26 @@ class AuthMutations {
       }
     }
   ''';
+
+  static const loginMutation = r'''
+    mutation Login($username: String!, $password: String!) {
+      login(username: $username, password: $password){
+        ... on CurrentUser {
+            id
+        }
+        ... on InvalidCredentialsError {
+            errorCode
+            message
+        }
+        ... on NotVerifiedError {
+            errorCode
+            message
+        }
+        ... on NativeAuthStrategyError {
+            errorCode
+            message
+        }
+      }
+    }
+  ''';
 }

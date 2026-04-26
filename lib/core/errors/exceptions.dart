@@ -33,3 +33,11 @@ class OrderInterceptorException implements Exception {
   @override
   String toString() => message;
 }
+
+class AccountNotVerifiedException implements Exception {
+  final String message;
+  AccountNotVerifiedException(this.message);
+
+  @override
+  String toString() => message;
+}

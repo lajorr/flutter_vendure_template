@@ -4,6 +4,8 @@ import 'package:vendure_flutter_app/features/auth/data/datasources/auth_remote_d
 import 'package:vendure_flutter_app/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:vendure_flutter_app/features/auth/domain/repositories/auth_repository.dart';
 import 'package:vendure_flutter_app/features/auth/domain/usecases/get_active_customer_usecase.dart';
+import 'package:vendure_flutter_app/features/auth/domain/usecases/login_usecase.dart';
+import 'package:vendure_flutter_app/features/auth/domain/usecases/register_usecase.dart';
 
 part 'auth_providers.g.dart';
 
@@ -23,4 +25,16 @@ AuthRepository authRepository(Ref ref) {
 GetActiveCustomerUsecase getActiveCustomerUsecase(Ref ref) {
   final repository = ref.watch(authRepositoryProvider);
   return GetActiveCustomerUsecase(repository);
+}
+
+@riverpod
+LoginUseCase loginUseCase(Ref ref) {
+  final repository = ref.watch(authRepositoryProvider);
+  return LoginUseCase(repository);
+}
+
+@riverpod
+RegisterUseCase registerUseCase(Ref ref) {
+  final repository = ref.watch(authRepositoryProvider);
+  return RegisterUseCase(repository);
 }
