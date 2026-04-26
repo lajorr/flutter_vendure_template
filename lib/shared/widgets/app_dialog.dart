@@ -59,9 +59,7 @@ class AppDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(24),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
       child: Padding(
         padding: const EdgeInsets.all(AppSpacing.xl),
         child: Column(
@@ -97,10 +95,7 @@ class AppDialog extends StatelessWidget {
               ),
             ),
             AppSpacing.vXL,
-            AppButton(
-              text: primaryButtonText,
-              onPressed: onPrimaryPressed,
-            ),
+            AppButton(text: primaryButtonText, onPressed: onPrimaryPressed),
             if (secondaryButtonText != null) ...[
               AppSpacing.vS,
               SizedBox(
@@ -112,7 +107,9 @@ class AppDialog extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    backgroundColor: AppColors.neutralGray.withValues(alpha: 0.5),
+                    backgroundColor: AppColors.neutralGray.withValues(
+                      alpha: 0.5,
+                    ),
                   ),
                   child: Text(
                     secondaryButtonText!,

@@ -11,6 +11,7 @@ import 'package:vendure_flutter_app/features/cart/presentation/widgets/cart_erro
 import 'package:vendure_flutter_app/features/cart/presentation/widgets/cart_items_section.dart';
 import 'package:vendure_flutter_app/features/cart/presentation/widgets/summary_section.dart';
 import 'package:vendure_flutter_app/shared/widgets/custom_app_bar.dart';
+import 'package:vendure_flutter_app/shared/widgets/app_dialog.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
@@ -153,9 +154,24 @@ class _CartScreenState extends ConsumerState<CartScreen> {
           color: AppColors.neutralGray,
           onSelected: (value) {
             if (value == 'delete_all') {
-              ref
-                  .read(cartItemControllerProvider.notifier)
-                  .removeAllOrderLine();
+              AppDialog.show(
+                context: context,
+                icon: const Icon(Icons.delete_outline),
+                iconColor: AppColors.error,
+                iconBackgroundColor: AppColors.error.withValues(alpha: 0.1),
+                title: 'Clear Cart',
+                description:
+                    'Are you sure you want to remove all items from your cart?',
+                primaryButtonText: 'Clear All',
+                onPrimaryPressed: () {
+                  Navigator.pop(context);
+                  ref
+                      .read(cartItemControllerProvider.notifier)
+                      .removeAllOrderLine();
+                },
+                secondaryButtonText: 'Cancel',
+                onSecondaryPressed: () => Navigator.pop(context),
+              );
             }
           },
           itemBuilder: (context) => [
