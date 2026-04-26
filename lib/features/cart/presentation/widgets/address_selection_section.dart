@@ -32,6 +32,8 @@ class _AddressSelectionSectionState
   Widget build(BuildContext context) {
     final addressState = ref.watch(customerAddressesControllerProvider);
 
+    
+
     return Container(
       padding: EdgeInsets.fromLTRB(
         AppSpacing.m,
@@ -175,7 +177,7 @@ class _AddressSelectionSectionState
                                         )
                                       : null,
                                 ),
-                                const SizedBox(width: AppSpacing.m),
+                                AppSpacing.hM,
                                 Expanded(
                                   child: Column(
                                     crossAxisAlignment:

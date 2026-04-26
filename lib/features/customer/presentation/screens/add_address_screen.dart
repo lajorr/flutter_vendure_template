@@ -5,7 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:vendure_flutter_app/core/theme/app_colors.dart';
 import 'package:vendure_flutter_app/core/theme/app_spacing.dart';
 import 'package:vendure_flutter_app/core/theme/app_text_styles.dart';
-import 'package:vendure_flutter_app/features/cart/application/controllers/set_order_address_controller.dart';
+import 'package:vendure_flutter_app/core/utils/validation_mixin.dart';
+import 'package:vendure_flutter_app/features/cart/application/controllers/order_address_controller.dart';
 import 'package:vendure_flutter_app/features/cart/domain/entities/active_order.dart';
 import 'package:vendure_flutter_app/shared/models/create_address_input.dart';
 import 'package:vendure_flutter_app/shared/widgets/custom_app_bar.dart';
@@ -27,7 +28,8 @@ class AddAddressScreen extends ConsumerStatefulWidget {
   ConsumerState<AddAddressScreen> createState() => _AddAddressScreenState();
 }
 
-class _AddAddressScreenState extends ConsumerState<AddAddressScreen> {
+class _AddAddressScreenState extends ConsumerState<AddAddressScreen>
+    with ValidationMixin {
   final _formKey = GlobalKey<FormState>();
   final _fullNameController = TextEditingController();
   final _streetLine1Controller = TextEditingController();
@@ -99,10 +101,10 @@ class _AddAddressScreenState extends ConsumerState<AddAddressScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final setAddressState = ref.watch(setOrderAddressControllerProvider);
+    final setAddressState = ref.watch(orderAddressControllerProvider);
     final isLoading = setAddressState.isLoading;
 
-    ref.listen(setOrderAddressControllerProvider, (previous, next) {
+    ref.listen(orderAddressControllerProvider, (previous, next) {
       if (next is AsyncError) {
         ScaffoldMessenger.of(
           context,
@@ -190,9 +192,9 @@ class _AddAddressScreenState extends ConsumerState<AddAddressScreen> {
                           isRequired: true,
                           hint: "House number and street name",
                           controller: _streetLine1Controller,
-                          validator: (value) => (value == null || value.isEmpty)
-                              ? "Street Line 1 is required"
-                              : null,
+                          validator: (value) =>
+                              validateRequired(value, 'Street Line 1'),
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
                         ),
                         AppSpacing.vS,
                         CustomTextField(
@@ -309,6 +311,7 @@ class _AddAddressScreenState extends ConsumerState<AddAddressScreen> {
 
                         buildLabel('Phone Number'),
                         Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Container(
                               height: 48,
@@ -347,6 +350,13 @@ class _AddAddressScreenState extends ConsumerState<AddAddressScreen> {
                               child: CustomTextField(
                                 hint: "98XXXXXXXX",
                                 controller: _phoneNumberController,
+                                keyboardType: TextInputType.phone,
+                                autovalidateMode:
+                                    AutovalidateMode.onUserInteraction,
+                                validator: (value) => validatePhoneNumber(
+                                  value,
+                                  _selectedCountry.value,
+                                ),
                               ),
                             ),
                           ],
@@ -429,22 +439,27 @@ class _AddAddressScreenState extends ConsumerState<AddAddressScreen> {
                   ? null
                   : () async {
                       if (_formKey.currentState!.validate()) {
+                        final fullPhoneNumber = getInternationalPhoneNumber(
+                          _phoneNumberController.text,
+                          _selectedCountry.value,
+                        );
+
                         final address = CreateAddressInput(
-                          fullName: _fullNameController.text,
-                          streetLine1: _streetLine1Controller.text,
-                          streetLine2: _streetLine2Controller.text,
-                          city: _cityController.text,
-                          province: _provinceController.text,
-                          postalCode: _postalCodeController.text,
+                          fullName: _fullNameController.text.trim(),
+                          streetLine1: _streetLine1Controller.text.trim(),
+                          streetLine2: _streetLine2Controller.text.trim(),
+                          city: _cityController.text.trim(),
+                          province: _provinceController.text.trim(),
+                          postalCode: _postalCodeController.text.trim(),
                           countryCode: _selectedCountry.value,
-                          phoneNumber: _phoneNumberController.text,
+                          phoneNumber: fullPhoneNumber,
                           defaultShippingAddress: _isDefault.value,
                           defaultBillingAddress: _isDefault.value,
                         );
 
                         if (widget.args.isGuest) {
                           await ref
-                              .read(setOrderAddressControllerProvider.notifier)
+                              .read(orderAddressControllerProvider.notifier)
                               .setAddress(address);
                         } else {
                           // TODO: Implement save address for logged in customer

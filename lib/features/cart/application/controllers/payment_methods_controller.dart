@@ -79,6 +79,8 @@ class PaymentMethodsController extends _$PaymentMethodsController {
 
     final input = AddPaymentToOrderUsecaseParams(method: selectedMethod.code);
 
+    state = const PaymentMethodsState.paymentProcessing();
+
     final result = await ref
         .read(addPaymentToOrderUsecaseProvider)
         .execute(input);
@@ -89,7 +91,8 @@ class PaymentMethodsController extends _$PaymentMethodsController {
         return false;
       },
       (_) {
-        // Success
+        state = const PaymentMethodsState.paymentSuccess();
+        ref.read(cartControllerProvider.notifier).fetchActiveOrder();
         return true;
       },
     );

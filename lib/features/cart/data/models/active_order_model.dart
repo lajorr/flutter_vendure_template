@@ -2,6 +2,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../../../features/products/data/models/asset_model.dart';
 import '../../../../features/products/data/models/product_variant_model.dart';
+import '../../../../features/auth/data/models/customer_model.dart';
 import '../../domain/entities/active_order.dart';
 
 part 'active_order_model.freezed.dart';
@@ -29,6 +30,7 @@ abstract class ActiveOrderModel with _$ActiveOrderModel {
     @Default([]) List<ActiveOrderLineModel> lines,
     ActiveOrderAddressModel? billingAddress,
     @Default([]) List<ActiveOrderShippingLineModel> shippingLines,
+    CustomerModel? customer,
     @Default('') String type,
   }) = _ActiveOrderModel;
 
@@ -57,6 +59,7 @@ abstract class ActiveOrderModel with _$ActiveOrderModel {
     lines: lines.map((e) => e.toEntity()).toList(),
     billingAddress: billingAddress?.toEntity(),
     shippingLines: shippingLines.map((e) => e.toEntity()).toList(),
+    customer: customer?.toEntity(),
     type: type,
   );
 }

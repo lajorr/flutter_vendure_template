@@ -8,6 +8,7 @@ import 'package:vendure_flutter_app/features/cart/application/controllers/cart_i
 import 'package:vendure_flutter_app/features/cart/application/controllers/cart_item_state.dart';
 import 'package:vendure_flutter_app/features/cart/domain/entities/cart_item_data.dart';
 import 'package:vendure_flutter_app/shared/widgets/app_cached_network_image.dart';
+import 'package:vendure_flutter_app/shared/widgets/custom_container.dart';
 
 class CartItemsSection extends StatelessWidget {
   const CartItemsSection({super.key, required this.items});
@@ -37,21 +38,7 @@ class _CartItemCard extends ConsumerWidget {
       orElse: () => false,
     );
 
-    return Container(
-      margin: const EdgeInsets.only(bottom: AppSpacing.s),
-      padding: const EdgeInsets.all(AppSpacing.m),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(AppSpacing.radiusCard),
-        border: Border.all(color: AppColors.neutralGray),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x14000000),
-            blurRadius: 6,
-            offset: Offset(0, 2),
-          ),
-        ],
-      ),
+    return CustomContainer(
       child: Stack(
         children: [
           Row(

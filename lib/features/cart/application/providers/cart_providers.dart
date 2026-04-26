@@ -6,6 +6,7 @@ import 'package:vendure_flutter_app/features/cart/data/datasources/cart_remote_d
 import 'package:vendure_flutter_app/features/cart/data/datasources/order_line_remote_datasource.dart';
 import 'package:vendure_flutter_app/features/cart/data/repositories/cart_repository_impl.dart';
 import 'package:vendure_flutter_app/features/cart/data/repositories/order_line_repository_impl.dart';
+import 'package:vendure_flutter_app/features/auth/domain/entities/customer.dart';
 import 'package:vendure_flutter_app/features/cart/domain/entities/active_order.dart';
 import 'package:vendure_flutter_app/features/cart/domain/repositories/cart_repository.dart';
 import 'package:vendure_flutter_app/features/cart/domain/usecases/add_item_to_order_usecase.dart';
@@ -20,17 +21,22 @@ import 'package:vendure_flutter_app/features/cart/domain/usecases/set_shipping_a
 import 'package:vendure_flutter_app/features/cart/domain/usecases/set_shipping_method_usecase.dart';
 import 'package:vendure_flutter_app/features/cart/domain/usecases/transition_order_to_state_usecase.dart';
 import 'package:vendure_flutter_app/features/cart/domain/usecases/add_payment_to_order_usecase.dart';
+import 'package:vendure_flutter_app/features/cart/domain/usecases/set_customer_for_order_usecase.dart';
+import 'package:vendure_flutter_app/features/cart/domain/usecases/unset_order_shipping_address_usecase.dart';
 
 part 'cart_providers.g.dart';
 
 @riverpod
 ActiveOrderAddress? shippingAddress(Ref ref) {
-  return ref
-      .watch(cartControllerProvider)
-      .maybeWhen(
-        success: (activeOrder) => activeOrder?.shippingAddress,
-        orElse: () => null,
-      );
+  return ref.watch(cartControllerProvider).maybeWhen(
+    success: (activeOrder) => activeOrder?.shippingAddress,
+    orElse: () => null,
+  );
+}
+
+@riverpod
+Customer? customer(Ref ref) {
+  return ref.watch(cartControllerProvider).customer;
 }
 
 @riverpod
@@ -129,4 +135,16 @@ TransitionOrderToStateUsecase transitionOrderToStateUsecase(Ref ref) {
 AddPaymentToOrderUsecase addPaymentToOrderUsecase(Ref ref) {
   final repository = ref.watch(cartRepositoryProvider);
   return AddPaymentToOrderUsecase(repository);
+}
+
+@riverpod
+SetCustomerForOrderUseCase setCustomerForOrderUsecase(Ref ref) {
+  final repository = ref.watch(cartRepositoryProvider);
+  return SetCustomerForOrderUseCase(repository);
+}
+
+@riverpod
+UnsetOrderShippingAddressUseCase unsetOrderShippingAddressUsecase(Ref ref) {
+  final repository = ref.watch(cartRepositoryProvider);
+  return UnsetOrderShippingAddressUseCase(repository);
 }

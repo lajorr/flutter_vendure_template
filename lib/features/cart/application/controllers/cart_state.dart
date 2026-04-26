@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../domain/entities/active_order.dart';
+import '../../../../features/auth/domain/entities/customer.dart';
 
 part 'cart_state.freezed.dart';
 
@@ -15,12 +16,17 @@ class CartState with _$CartState {
 
 extension CartStateExt on CartState {
   ActiveOrderStateEnum get activeOrderState => maybeWhen(
-    success: (activeOrder) {
-      final state = activeOrder?.state ?? "";
-      return ActiveOrderStateEnum.fromString(state);
-    },
-    orElse: () => ActiveOrderStateEnum.addingItems,
-  );
+        success: (activeOrder) {
+          final state = activeOrder?.state ?? "";
+          return ActiveOrderStateEnum.fromString(state);
+        },
+        orElse: () => ActiveOrderStateEnum.addingItems,
+      );
+
+  Customer? get customer => maybeWhen(
+        success: (activeOrder) => activeOrder?.customer,
+        orElse: () => null,
+      );
 }
 
 enum ActiveOrderStateEnum {

@@ -76,6 +76,12 @@ class OrderFragments {
         customFields
     }
     type
+    customer {
+        id
+        firstName
+        lastName
+        emailAddress
+    }
 
   ''';
 }

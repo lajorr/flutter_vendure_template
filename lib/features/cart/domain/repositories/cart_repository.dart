@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:vendure_flutter_app/features/cart/domain/entities/payment_method.dart';
 import 'package:vendure_flutter_app/features/cart/domain/entities/shipping_method.dart';
 import 'package:vendure_flutter_app/shared/models/create_address_input.dart';
+import 'package:vendure_flutter_app/shared/models/create_customer_input.dart';
 
 import '../../../../core/errors/failures.dart';
 import '../entities/active_order.dart';
@@ -29,6 +30,12 @@ abstract class CartRepository {
     required String method,
     Map<String, dynamic>? metadata,
   });
+
+  Future<Either<Failure, ActiveOrder>> setCustomerForOrder({
+    required CreateCustomerInput customerInput,
+  });
+
+  Future<Either<Failure, ActiveOrder>> unsetOrderShippingAddress();
 }
 
 abstract class OrderLineRepository {

@@ -8,6 +8,8 @@ part 'payment_methods_state.freezed.dart';
 class PaymentMethodsState with _$PaymentMethodsState {
   const factory PaymentMethodsState.initial() = _Initial;
   const factory PaymentMethodsState.loading() = _Loading;
+  const factory PaymentMethodsState.paymentProcessing() = _PaymentProcessing;
+  const factory PaymentMethodsState.paymentSuccess() = _PaymentSuccess;
   const factory PaymentMethodsState.success({
     required List<PaymentMethod> methods,
     PaymentMethod? selectedPaymentMethod,

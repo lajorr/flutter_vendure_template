@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:vendure_flutter_app/features/auth/domain/entities/customer.dart';
 import 'package:vendure_flutter_app/features/products/domain/entities/asset.dart';
 
 import '../../../../features/products/domain/entities/product_variant.dart';
@@ -33,12 +34,14 @@ abstract class ActiveOrder with _$ActiveOrder {
     @Default([]) List<ActiveOrderLine> lines,
     ActiveOrderAddress? billingAddress,
     @Default([]) List<ActiveOrderShippingLine> shippingLines,
+    Customer? customer,
     required String type,
   }) = _ActiveOrder;
 }
 
 @freezed
 abstract class ActiveOrderAddress with _$ActiveOrderAddress {
+  const ActiveOrderAddress._();
   const factory ActiveOrderAddress({
     String? fullName,
     String? company,
@@ -52,6 +55,22 @@ abstract class ActiveOrderAddress with _$ActiveOrderAddress {
     String? phoneNumber,
     dynamic customFields,
   }) = _ActiveOrderAddress;
+
+  bool get isEmpty {
+    bool isNullOrEmpty(String? value) => value == null || value.trim().isEmpty;
+
+    return isNullOrEmpty(fullName) &&
+        isNullOrEmpty(company) &&
+        isNullOrEmpty(streetLine1) &&
+        isNullOrEmpty(streetLine2) &&
+        isNullOrEmpty(city) &&
+        isNullOrEmpty(province) &&
+        isNullOrEmpty(postalCode) &&
+        isNullOrEmpty(country) &&
+        isNullOrEmpty(countryCode) &&
+        isNullOrEmpty(phoneNumber) &&
+        customFields == null;
+  }
 }
 
 @freezed

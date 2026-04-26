@@ -8,6 +8,7 @@ enum AppRoute {
   orders('/orders'),
   login('/login'),
   signup('/signup'),
+  setGuestCustomer('/set-guest-customer'),
   payment('/payment');
 
   final String path;

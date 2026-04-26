@@ -5,6 +5,7 @@ import 'package:vendure_flutter_app/core/theme/app_colors.dart';
 import 'package:vendure_flutter_app/core/theme/app_spacing.dart';
 import 'package:vendure_flutter_app/core/theme/app_text_styles.dart';
 import 'package:vendure_flutter_app/shared/widgets/app_button.dart';
+import 'package:vendure_flutter_app/shared/widgets/custom_container.dart';
 import 'package:vendure_flutter_app/shared/widgets/order_summary/summary_row.dart';
 
 class SummarySection extends StatelessWidget {
@@ -25,21 +26,7 @@ class SummarySection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(AppSpacing.m),
-          decoration: BoxDecoration(
-            color: AppColors.surface,
-            borderRadius: BorderRadius.circular(AppSpacing.radiusCard),
-            border: Border.all(color: AppColors.neutralGray),
-            boxShadow: const [
-              BoxShadow(
-                color: Color(0x14000000),
-                blurRadius: 6,
-                offset: Offset(0, 2),
-              ),
-            ],
-          ),
+        CustomContainer(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -92,21 +79,7 @@ class SummarySection extends StatelessWidget {
           ),
         ),
         AppSpacing.vM,
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(AppSpacing.l),
-          decoration: BoxDecoration(
-            color: AppColors.surface,
-            borderRadius: BorderRadius.circular(AppSpacing.radiusCard),
-            border: Border.all(color: AppColors.neutralGray),
-            boxShadow: const [
-              BoxShadow(
-                color: Color(0x14000000),
-                blurRadius: 6,
-                offset: Offset(0, 2),
-              ),
-            ],
-          ),
+        CustomContainer(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

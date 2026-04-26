@@ -6,6 +6,7 @@ import 'package:vendure_flutter_app/core/theme/app_text_styles.dart';
 import 'package:vendure_flutter_app/features/cart/application/controllers/shipping_methods_controller.dart';
 import 'package:vendure_flutter_app/features/cart/application/controllers/shipping_methods_state.dart';
 import 'package:vendure_flutter_app/features/cart/domain/entities/shipping_method.dart';
+import 'package:vendure_flutter_app/shared/widgets/custom_container.dart';
 
 class ShippingMethodCard extends ConsumerStatefulWidget {
   const ShippingMethodCard({super.key});
@@ -38,25 +39,7 @@ class _ShippingMethodCardState extends ConsumerState<ShippingMethodCard> {
 
     final state = ref.watch(shippingMethodsControllerProvider);
 
-    return Container(
-      padding: EdgeInsets.fromLTRB(
-        AppSpacing.m,
-        AppSpacing.m,
-        AppSpacing.m,
-        AppSpacing.s,
-      ),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(AppSpacing.radiusCard),
-        border: Border.all(color: AppColors.neutralGray),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x14000000),
-            blurRadius: 6,
-            offset: Offset(0, 2),
-          ),
-        ],
-      ),
+    return CustomContainer(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,

@@ -8,6 +8,7 @@ import 'package:vendure_flutter_app/core/theme/app_text_styles.dart';
 import 'package:vendure_flutter_app/features/cart/application/providers/cart_providers.dart';
 import 'package:vendure_flutter_app/features/cart/presentation/widgets/guest_address_tile.dart';
 import 'package:vendure_flutter_app/features/customer/presentation/screens/add_address_screen.dart';
+import 'package:vendure_flutter_app/shared/widgets/custom_container.dart';
 
 class SetAddressSection extends ConsumerWidget {
   const SetAddressSection({super.key});
@@ -16,34 +17,13 @@ class SetAddressSection extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final shippingAddress = ref.watch(shippingAddressProvider);
 
-    return Container(
-      padding: const EdgeInsets.fromLTRB(
-        AppSpacing.m,
-        AppSpacing.m,
-        AppSpacing.m,
-        AppSpacing.s,
-      ),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(AppSpacing.radiusCard),
-        border: Border.all(color: AppColors.neutralGray),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x14000000),
-            blurRadius: 6,
-            offset: Offset(0, 2),
-          ),
-        ],
-      ),
+    return CustomContainer(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [Text('Deliver to', style: AppTextStyles.h3)],
-          ),
-          const SizedBox(height: AppSpacing.m),
-          if (shippingAddress != null)
+          Text('Deliver to', style: AppTextStyles.h3),
+          AppSpacing.vM,
+          if (shippingAddress != null && !shippingAddress.isEmpty)
             GuestAddressTile(address: shippingAddress)
           else
             InkWell(

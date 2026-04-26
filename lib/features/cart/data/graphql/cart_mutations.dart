@@ -101,6 +101,21 @@ class CartMutations {
       }
     }
   ''';
+  static const unsetOrderShippingAddressMutation =
+      '''
+    mutation UnsetOrderShippingAddress{
+      unsetOrderShippingAddress {
+        __typename
+        ... on Order {
+          ${OrderFragments.orderFields}
+        }
+        ... on NoActiveOrderError{
+          errorCode
+          message
+        }
+      }
+    }
+  ''';
 
   static const setOrderShippingAddressMutation = '''
     mutation SetOrderShippingAddress(\$input: CreateAddressInput!){
@@ -151,13 +166,12 @@ class CartMutations {
     }
   ''';
 
-  static const addPaymentToOrder =
-      '''
+  static const addPaymentToOrder = '''
   mutation AddPaymentToOrder(\$input: PaymentInput!) {
     addPaymentToOrder(input: \$input){
       __typename
       ... on Order {
-      ${OrderFragments.orderFields}
+        id
       }
       ... on OrderPaymentStateError{
         errorCode
@@ -185,7 +199,33 @@ class CartMutations {
       } 
     }
   }
-
-
 ''';
+
+  static const setCustomerForOrderMutation =
+      '''
+    mutation SetCustomerForOrder(\$input: CreateCustomerInput!) {
+      setCustomerForOrder(input: \$input){
+        __typename
+        ... on Order {
+        ${OrderFragments.orderFields}
+        }
+        ... on AlreadyLoggedInError{
+          errorCode
+          message
+        }
+        ... on EmailAddressConflictError{
+          errorCode
+          message
+        }
+        ... on NoActiveOrderError{
+          errorCode
+          message
+        } 
+        ... on GuestCheckoutError{
+          errorCode
+          message
+        } 
+      }
+    }
+  ''';
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:vendure_flutter_app/app/router/app_routes.dart';
 import 'package:vendure_flutter_app/core/theme/app_colors.dart';
 import 'package:vendure_flutter_app/core/theme/app_spacing.dart';
 import 'package:vendure_flutter_app/core/theme/app_text_styles.dart';
@@ -8,7 +9,9 @@ import 'package:vendure_flutter_app/features/cart/application/controllers/cart_s
 import 'package:vendure_flutter_app/features/cart/application/controllers/payment_methods_controller.dart';
 import 'package:vendure_flutter_app/features/cart/application/controllers/payment_methods_state.dart';
 import 'package:vendure_flutter_app/features/cart/presentation/widgets/payment_method_card.dart';
+import 'package:vendure_flutter_app/features/dashboard/application/dashboard_controller.dart';
 import 'package:vendure_flutter_app/shared/widgets/app_button.dart';
+import 'package:vendure_flutter_app/shared/widgets/app_dialog.dart';
 import 'package:vendure_flutter_app/shared/widgets/custom_app_bar.dart';
 import 'package:vendure_flutter_app/shared/widgets/order_summary/summary_row.dart';
 
@@ -34,6 +37,40 @@ class _CartPaymentScreenState extends ConsumerState<CartPaymentScreen> {
   Widget build(BuildContext context) {
     final cartState = ref.watch(cartControllerProvider);
     final paymentState = ref.watch(paymentMethodsControllerProvider);
+
+    ref.listen(paymentMethodsControllerProvider, (previous, next) {
+      next.maybeWhen(
+        paymentSuccess: () {
+          AppDialog.show(
+            context: context,
+            icon: const Icon(Icons.check_circle_outline),
+            iconColor: AppColors.white,
+            iconBackgroundColor: AppColors.successGreen,
+            title: 'Order Placed!',
+            description:
+                'Your order has been successfully placed. Thank you for shopping with us!',
+            primaryButtonText: 'View Orders',
+            onPrimaryPressed: () {
+              ref
+                  .read(dashboardControllerProvider.notifier)
+                  .setIndex(DashboardTabs.home);
+              // Navigate to orders or home
+              Navigator.of(context).popUntil((route) => route.isFirst);
+            },
+          );
+        },
+        error: (message) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(message),
+              backgroundColor: AppColors.error,
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+        },
+        orElse: () {},
+      );
+    });
 
     return Scaffold(
       appBar: const CustomAppBar(title: 'Checkout'),
@@ -64,7 +101,7 @@ class _CartPaymentScreenState extends ConsumerState<CartPaymentScreen> {
                     ),
                   ),
                   AppSpacing.vL,
-                  paymentState.when(
+                  ?paymentState.whenOrNull(
                     initial: () => const SizedBox.shrink(),
                     loading: () =>
                         const Center(child: CircularProgressIndicator()),
@@ -188,6 +225,10 @@ class _CartPaymentScreenState extends ConsumerState<CartPaymentScreen> {
             AppSpacing.vL,
             AppButton(
               text: 'Place Order',
+              isLoading: paymentState.maybeWhen(
+                paymentProcessing: () => true,
+                orElse: () => false,
+              ),
               onPressed: selectedMethod == null
                   ? null
                   : () {

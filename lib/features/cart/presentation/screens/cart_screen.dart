@@ -248,7 +248,7 @@ class _CartLoadedView extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               CartItemsSection(items: items),
-              AppSpacing.vL,
+              AppSpacing.vM,
               SummarySection(
                 subtotal: subtotal,
                 shipping: shippingFee,

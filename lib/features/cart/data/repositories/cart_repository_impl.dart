@@ -3,6 +3,7 @@ import 'package:vendure_flutter_app/core/errors/repository_exception_handler.dar
 import 'package:vendure_flutter_app/features/cart/domain/entities/payment_method.dart';
 import 'package:vendure_flutter_app/features/cart/domain/entities/shipping_method.dart';
 import 'package:vendure_flutter_app/shared/models/create_address_input.dart';
+import 'package:vendure_flutter_app/shared/models/create_customer_input.dart';
 
 import '../../../../core/errors/failures.dart';
 import '../../domain/entities/active_order.dart';
@@ -97,9 +98,30 @@ class CartRepositoryImpl
     Map<String, dynamic>? metadata,
   }) {
     return exceptionHandler(() async {
-      await _cartRemoteDatasource.addPaymentToOrder(
+      return await _cartRemoteDatasource.addPaymentToOrder(
         PaymentInput(method: method, metadata: metadata ?? {}),
       );
+    });
+  }
+
+  @override
+  Future<Either<Failure, ActiveOrder>> setCustomerForOrder({
+    required CreateCustomerInput customerInput,
+  }) {
+    return exceptionHandler(() async {
+      final orderModel = await _cartRemoteDatasource.setCustomerForOrder(
+        customerInput,
+      );
+      return orderModel.toEntity();
+    });
+  }
+
+  @override
+  Future<Either<Failure, ActiveOrder>> unsetOrderShippingAddress() {
+    return exceptionHandler(() async {
+      final orderModel = await _cartRemoteDatasource
+          .unsetOrderShippingAddress();
+      return orderModel.toEntity();
     });
   }
 }

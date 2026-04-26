@@ -4,6 +4,7 @@ import 'package:vendure_flutter_app/features/cart/data/graphql/cart_mutations.da
 import 'package:vendure_flutter_app/features/cart/data/models/eligible_shipping_methods.dart';
 import 'package:vendure_flutter_app/features/cart/data/models/payment_method_model.dart';
 import 'package:vendure_flutter_app/shared/models/create_address_input.dart';
+import 'package:vendure_flutter_app/shared/models/create_customer_input.dart';
 
 import '../../../../core/network/graphql_service.dart';
 import '../graphql/cart_queries.dart';
@@ -17,11 +18,16 @@ abstract class CartRemoteDataSource {
   });
   Future<List<PaymentMethodModel>> fetchEligiblePaymentMethods();
   Future<void> setOrderShippingMethod(String shippingMethodId);
+  Future<ActiveOrderModel> unsetOrderShippingAddress();
   Future<void> setOrderShippingAddress(CreateAddressInput addressInput);
   Future<void> setOrderBillingAddress(CreateAddressInput addressInput);
   Future<void> transitionOrderToState(String state);
 
   Future<void> addPaymentToOrder(PaymentInput input);
+
+  Future<ActiveOrderModel> setCustomerForOrder(
+    CreateCustomerInput customerInput,
+  );
 }
 
 class CartRemoteDataSourceImpl implements CartRemoteDataSource {
@@ -203,6 +209,58 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
       case "PaymentFailedError":
       case "PaymentDeclinedError":
       case "OrderStateTransitionError":
+      case "NoActiveOrderError":
+        throw ServerException(result["message"]);
+      default:
+        throw ServerException("Unexpected Error");
+    }
+  }
+
+  @override
+  Future<ActiveOrderModel> setCustomerForOrder(
+    CreateCustomerInput customerInput,
+  ) async {
+    final data = await _graphqlService.performMutation(
+      CartMutations.setCustomerForOrderMutation,
+      operationName: 'SetCustomerForOrder',
+      variables: {"input": customerInput.toJson().withoutNulls},
+    );
+
+    final result = data["setCustomerForOrder"];
+    if (result == null) {
+      throw ServerException("No Data Found");
+    }
+    final typename = result["__typename"];
+    switch (typename) {
+      case "Order":
+        return ActiveOrderModel.fromJson(result);
+      case "OrderPaymentStateError":
+      case "IneligiblePaymentMethodError":
+      case "PaymentFailedError":
+      case "PaymentDeclinedError":
+      case "OrderStateTransitionError":
+      case "NoActiveOrderError":
+        throw ServerException(result["message"]);
+      default:
+        throw ServerException("Unexpected Error");
+    }
+  }
+
+  @override
+  Future<ActiveOrderModel> unsetOrderShippingAddress() async {
+    final data = await _graphqlService.performMutation(
+      CartMutations.unsetOrderShippingAddressMutation,
+      operationName: 'UnsetOrderShippingAddress',
+    );
+
+    final result = data["unsetOrderShippingAddress"];
+    if (result == null) {
+      throw ServerException("No Data Found");
+    }
+    final typename = result["__typename"];
+    switch (typename) {
+      case "Order":
+        return ActiveOrderModel.fromJson(result);
       case "NoActiveOrderError":
         throw ServerException(result["message"]);
       default:
